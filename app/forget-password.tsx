@@ -25,10 +25,10 @@ export default function ForgetPassword() {
   return (
     <SafeAreaView style={styles.container}>
         
-        <ThemedText type='title'>Mot de passe oublié</ThemedText>
+        <ThemedText type='title' style={{marginTop: 25}}>Mot de passe oublié</ThemedText>
 
-        <ThemedText type='subtitle'>
-            Pour récuperer  votre mot de passe, entrer notre adresse email.
+        <ThemedText type='link'>
+            Pour récuperer votre mot de passe, entrez notre adresse email.
             Nous vous enverons un code par mail
         </ThemedText>
 
@@ -41,17 +41,19 @@ export default function ForgetPassword() {
             <ThemedView style={styles.empty}>
                 <ThemeIcon name='email' />
                 <Input
-                type='icon'
-                label="Email"
-                value={value}
-                onChangeText={onChange}
+                    type='icon'
+                    label="Email"
+                    value={value}
+                    placeholder='Email'
+                    autoFocus
+                    onChangeText={onChange}
                 />
             </ThemedView>
             )}
             name="email"
         />
 
-        <TouchableOpacity>
+        <TouchableOpacity style={{width: '100%'}}>
             <ThemedView style={styles.next_button}>
                 <ThemedText style={styles.textWhite}>
                     Envoyer
@@ -60,9 +62,9 @@ export default function ForgetPassword() {
         </TouchableOpacity>
 
         <ThemedView style={styles.account}>
-            <ThemedText type='link'>Vous avez un compte?</ThemedText>
+            <ThemedText>Vous avez un compte?</ThemedText>
             <TouchableOpacity onPress={() => router.navigate('/login')}>
-            <ThemedText type='link' style={styles.primay_color}>{' '} se connecter</ThemedText>
+                <ThemedText type='link' style={styles.primay_color}>{' '} Se connecter</ThemedText>
             </TouchableOpacity>
         </ThemedView>
 
@@ -73,10 +75,10 @@ export default function ForgetPassword() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    alignItems: 'center',
     paddingTop: StatusBar.currentHeight,
     flexDirection: 'column',
-    rowGap: 10,
+    rowGap: 20,
     paddingHorizontal: 10
   },
   link: {
@@ -91,6 +93,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     paddingHorizontal: 10,
     height: 43,
+    width: '100%'
   },
   next_button: {
     width: '100%',
@@ -103,10 +106,10 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   account: {
-    marginTop: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: 'transparent'
   },
   primay_color: {
     color: '#0ea5e9'

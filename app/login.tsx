@@ -52,6 +52,8 @@ export default function LoginScreen() {
                     type='icon'
                     label="Email"
                     value={value}
+                    placeholder='Email'
+                    autoFocus
                     onChangeText={onChange}
                   />
                 </ThemedView>
@@ -72,6 +74,7 @@ export default function LoginScreen() {
                       type='icon'
                       label="Password"
                       value={value}
+                      placeholder='Mot de passe'
                       onChangeText={onChange}
                       secureTextEntry={showPassword ? false : true}
                     />
@@ -83,7 +86,7 @@ export default function LoginScreen() {
             />
 
             <ThemedView style={styles.forgot_password}>
-              <TouchableOpacity onPress={() => router.replace("/")}>
+              <TouchableOpacity onPress={() => router.navigate("/forget-password")}>
                 <ThemedText type='link'>Mot de passe oublié?</ThemedText>
               </TouchableOpacity>
             </ThemedView>

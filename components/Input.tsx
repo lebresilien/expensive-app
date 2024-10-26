@@ -4,19 +4,34 @@ import { TextInput, StyleSheet, TextInputProps, View, Text } from "react-native"
 interface CustomInputProps extends TextInputProps {
     label?: string;
     errorMessage?: FieldError;
+    type?: 'default' | 'icon'
 }
-const Input: React.FC<CustomInputProps> = ({ label, errorMessage, ...props }) => {
-    console.log('error', errorMessage)
+const Input: React.FC<CustomInputProps> = ({ label, errorMessage, type='default', ...props }) => {
     return (
-      <View style={styles.container}>
-        {label && <Text style={styles.label}>{label}</Text>}
-        <TextInput
-           // @ts-ignore
-           style={[styles.input, errorMessage && styles.inputError]}
-          {...props}
-        />
-        {errorMessage && <Text style={styles.error}>This Field is Required</Text>}
-      </View>
+        <>
+            {type === 'default' ?
+                <View style={styles.container}>
+                    {label && <Text style={styles.label}>{label}</Text>}
+                    <TextInput
+                        // @ts-ignore
+                        style={[styles.input, errorMessage && styles.inputError]}
+                        selectionColor='#0ea5e9'
+                        {...props}
+                    />
+                    {errorMessage && <Text style={styles.error}>Ce champ est obligatoire</Text>}
+                </View>
+                :
+                <View style={styles.container}>
+                    <TextInput
+                        // @ts-ignore
+                        style={[styles.inputIcon, errorMessage && styles.inputError]}
+                        selectionColor='#0ea5e9'
+                        {...props}
+                    />
+                    {errorMessage && <Text style={styles.error}>Ce champ est obligatoire</Text>}
+                </View>
+            }
+        </>
     );
   };
 
@@ -30,7 +45,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderRadius: 50,
-        borderColor: '#0ea5e9'
+        borderColor: '#0ea5e9',
+    },
+    inputIcon: {
+        width: 200,
+        fontSize: 16,
+        marginLeft: 5
     },
     label: {
         fontWeight: '600'

@@ -13,7 +13,7 @@ export default function OnBoarding() {
     const router = useRouter();
 
     const goToPage = (index: number) => {
-      if(index === 2) {
+      if(index === 3) {
         router.navigate('/login');
       }
       pagerRef.current?.setPage(index); 

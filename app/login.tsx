@@ -1,11 +1,14 @@
 
-import { SafeAreaView, StyleSheet, StatusBar, Image, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, StatusBar, Image, TouchableOpacity, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useForm, Controller } from "react-hook-form";
 import Input from '@/components/Input';
 import { useRouter } from 'expo-router';
+import { ThemeIcon } from '@/components/ThemeIcon';
+import { Colors } from '@/constants/Colors';
+import { useState } from 'react';
 
 interface FormValues {
   username: string;
@@ -13,6 +16,7 @@ interface FormValues {
 }
 export default function LoginScreen() {
 
+    const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
 
     const {
@@ -34,7 +38,7 @@ export default function LoginScreen() {
 
           <ThemedView style={styles.form}>
 
-            <ThemedText type='defaultSemiBold'>Expensive-App</ThemedText>
+            <ThemedText type='defaultSemiBold'>Se connecter</ThemedText>
             
             <Controller
               control={control}
@@ -42,11 +46,15 @@ export default function LoginScreen() {
                 required: true,
               }}
               render={({ field: { onChange, value } }) => (
+                <ThemedView style={styles.empty}>
+                  <ThemeIcon name='email' />
                   <Input
-                      label="Email"
-                      value={value}
-                      onChangeText={onChange}
+                    type='icon'
+                    label="Email"
+                    value={value}
+                    onChangeText={onChange}
                   />
+                </ThemedView>
               )}
               name="username"
             />
@@ -57,12 +65,19 @@ export default function LoginScreen() {
                 required: true,
               }}
               render={({ field: { onChange, value } }) => (
-                  <Input
-                    label="Password"
-                    value={value}
-                    onChangeText={onChange}
-                    secureTextEntry
-                  />
+                <ThemedView style={styles.empty}>
+                  <ThemedView style={styles.viewPassword}>
+                    <ThemeIcon name='lock' type='ant' />
+                    <Input
+                      type='icon'
+                      label="Password"
+                      value={value}
+                      onChangeText={onChange}
+                      secureTextEntry={showPassword ? false : true}
+                    />
+                  </ThemedView>
+                  <ThemeIcon name={showPassword ? 'eye' : 'eye-off'} type='ionic' onPress={() => setShowPassword(!showPassword)} />
+                </ThemedView>
               )}
               name="password"
             />
@@ -103,17 +118,13 @@ const styles = StyleSheet.create({
       paddingTop: StatusBar.currentHeight
     },
     header: {
-      flex: 0.6,
+      flex: 0.7,
       flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     logo: {
       height: 100,
-      width: 100,
-      bottom: 0,
-      left: 0,
-      borderRadius: 50
+      width: 100
     },
     form: {
       flex: 2,
@@ -143,6 +154,27 @@ const styles = StyleSheet.create({
     },
     primay_color: {
       color: '#0ea5e9'
+    },
+    empty: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: '#0ea5e9',
+      borderRadius: 50,
+      paddingHorizontal: 10,
+      height: 43,
+    },
+    icon: {
+      marginRight: 10,
+    },
+    input: {
+      flex: 1,
+      fontSize: 16,
+    },
+    viewPassword: {
+      flex: 10,
+      flexDirection: 'row',
+      alignItems: 'center'  
     }
 });
   

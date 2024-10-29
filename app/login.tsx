@@ -103,7 +103,7 @@ export default function LoginScreen() {
 
             <ThemedView style={styles.account}>
               <ThemedText type='link'>Vous n'avez pas de compte?</ThemedText>
-              <TouchableOpacity onPress={() => router.navigate('/register')}>
+              <TouchableOpacity onPress={() => router.push('/register')}>
                 <ThemedText type='link' style={styles.primay_color}>{' '} s'enregistrer</ThemedText>
               </TouchableOpacity>
             </ThemedView>
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     },
     form: {
       flex: 2,
-      rowGap: 10,
+      rowGap: 20,
       flexDirection: 'column',
       paddingHorizontal: 10
     },

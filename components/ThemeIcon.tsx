@@ -10,7 +10,7 @@ export type ThemedIconProps = {
     name: React.ComponentProps<typeof Entypo | typeof AntDesign | typeof Ionicons>["name"];
     type?: 'default' | 'ant' | 'ionic',
     onPress?: () => void
-  };
+};
 export const ThemeIcon = ({
     lightColor,
     darkColor,

@@ -7,13 +7,17 @@ import { useForm, Controller } from "react-hook-form";
 import { ThemeIcon } from '@/components/ThemeIcon';
 import Input from '@/components/Input';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 
 interface FormValues {
-    email: string
+    password: string
+    confirm: string
 }
 
 export default function ForgetPassword() {
 
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const router = useRouter();
 
     const {
@@ -25,11 +29,10 @@ export default function ForgetPassword() {
   return (
     <SafeAreaView style={styles.container}>
         
-        <ThemedText type='title' style={{marginTop: 25}}>Mot de passe oublié</ThemedText>
+        <ThemedText type='title' style={{marginTop: 25}}>renitialisez votre Mot passe</ThemedText>
 
         <ThemedText type='link'>
-            Pour récuperer votre mot de passe, entrez notre adresse email.
-            Nous vous enverons un code par mail
+            Renseignez votre nouveau mot de passe et confirmer le
         </ThemedText>
 
         <Controller
@@ -39,34 +42,56 @@ export default function ForgetPassword() {
             }}
             render={({ field: { onChange, value } }) => (
             <ThemedView style={styles.empty}>
-                <ThemeIcon name='email' />
-                <Input
-                    type='icon'
-                    label="Email"
-                    value={value}
-                    placeholder='Email'
-                    autoFocus
-                    onChangeText={onChange}
-                />
+                <ThemedView style={styles.viewPassword}>
+                    <ThemeIcon name='lock' type='ant'/>
+                    <Input
+                        type='icon'
+                        label="Password"
+                        value={value}
+                        placeholder='Mot de passe'
+                        autoFocus
+                        onChangeText={onChange}
+                        secureTextEntry={showPassword ? false : true}
+                    />
+                </ThemedView>
+                <ThemeIcon name={showPassword ? 'eye' : 'eye-off'} type='ionic' onPress={() => setShowPassword(!showPassword)} />
             </ThemedView>
+            
             )}
-            name="email"
+            name="password"
+        />
+
+        <Controller
+            control={control}
+            rules={{
+                required: true,
+            }}
+            render={({ field: { onChange, value } }) => (
+                <ThemedView style={styles.empty}>
+                    <ThemedView style={styles.viewPassword}>
+                        <ThemeIcon name='lock' type='ant' />
+                        <Input
+                        type='icon'
+                        label="Password"
+                        value={value}
+                        placeholder='Confirmez votre mot de passe'
+                        onChangeText={onChange}
+                        secureTextEntry={showPassword ? false : true}
+                        />
+                    </ThemedView>
+                    <ThemeIcon name={showConfirmPassword ? 'eye' : 'eye-off'} type='ionic' onPress={() => setShowPassword(!showConfirmPassword)} />
+                </ThemedView>
+            )}
+            name="confirm"
         />
 
         <TouchableOpacity style={{width: '100%'}} onPress={() => router.navigate('/otp')}>
             <ThemedView style={styles.next_button}>
                 <ThemedText style={styles.textWhite}>
-                    Envoyer
+                    Renitialiser
                 </ThemedText>
             </ThemedView>
         </TouchableOpacity>
-
-        <ThemedView style={styles.account}>
-            <ThemedText>Vous avez un compte?</ThemedText>
-            <TouchableOpacity onPress={() => router.navigate('/login')}>
-                <ThemedText type='link' style={styles.primay_color}>{' '} Se connecter</ThemedText>
-            </TouchableOpacity>
-        </ThemedView>
 
     </SafeAreaView>
   );
@@ -114,4 +139,9 @@ const styles = StyleSheet.create({
   primay_color: {
     color: '#0ea5e9'
   },
+  viewPassword: {
+    flex: 10,
+    flexDirection: 'row',
+    alignItems: 'center'  
+  }
 });

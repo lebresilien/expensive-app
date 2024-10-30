@@ -40,7 +40,7 @@ export default function LoginScreen() {
 
           <ThemedView style={styles.form}>
 
-            <ThemedText type='defaultSemiBold'>S'enregidstrer</ThemedText>
+            <ThemedText type='defaultSemiBold'>S'enregistrer</ThemedText>
             
                 <Controller
                     control={control}
@@ -49,15 +49,15 @@ export default function LoginScreen() {
                     }}
                     render={({ field: { onChange, value } }) => (
                         <ThemedView style={styles.empty}>
-                        <ThemeIcon name='user' />
-                        <Input
-                            type='icon'
-                            label="Email"
-                            value={value}
-                            placeholder='Noms et prénom(s)'
-                            autoFocus
-                            onChangeText={onChange}
-                        />
+                          <ThemeIcon name='user' />
+                          <Input
+                              type='icon'
+                              label="Email"
+                              value={value}
+                              placeholder='Nom(s) et Prénom(s)'
+                              autoFocus
+                              onChangeText={onChange}
+                          />
                         </ThemedView>
                     )}
                     name="name"
@@ -70,15 +70,14 @@ export default function LoginScreen() {
                     }}
                     render={({ field: { onChange, value } }) => (
                         <ThemedView style={styles.empty}>
-                        <ThemeIcon name='email' />
-                        <Input
-                            type='icon'
-                            label="Email"
-                            value={value}
-                            placeholder='Email'
-                            autoFocus
-                            onChangeText={onChange}
-                        />
+                          <ThemeIcon name='email' />
+                          <Input
+                              type='icon'
+                              label="Email"
+                              value={value}
+                              placeholder='Email'
+                              onChangeText={onChange}
+                          />
                         </ThemedView>
                     )}
                     name="email"
@@ -91,18 +90,18 @@ export default function LoginScreen() {
                     }}
                     render={({ field: { onChange, value } }) => (
                         <ThemedView style={styles.empty}>
-                        <ThemedView style={styles.viewPassword}>
-                            <ThemeIcon name='lock' type='ant' />
-                            <Input
-                            type='icon'
-                            label="Password"
-                            value={value}
-                            placeholder='Mot de passe'
-                            onChangeText={onChange}
-                            secureTextEntry={showPassword ? false : true}
-                            />
-                        </ThemedView>
-                        <ThemeIcon name={showPassword ? 'eye' : 'eye-off'} type='ionic' onPress={() => setShowPassword(!showPassword)} />
+                          <ThemedView style={styles.viewPassword}>
+                              <ThemeIcon name='lock' type='ant' />
+                              <Input
+                                type='icon'
+                                label="Password"
+                                value={value}
+                                placeholder='Mot de passe'
+                                onChangeText={onChange}
+                                secureTextEntry={showPassword ? false : true}
+                              />
+                          </ThemedView>
+                          <ThemeIcon name={showPassword ? 'eye' : 'eye-off'} type='ionic' onPress={() => setShowPassword(!showPassword)} />
                         </ThemedView>
                     )}
                     name="password"
@@ -115,18 +114,18 @@ export default function LoginScreen() {
                     }}
                     render={({ field: { onChange, value } }) => (
                         <ThemedView style={styles.empty}>
-                        <ThemedView style={styles.viewPassword}>
-                            <ThemeIcon name='lock' type='ant' />
-                            <Input
-                            type='icon'
-                            label="Password"
-                            value={value}
-                            placeholder='Confirmez votre mot de passe'
-                            onChangeText={onChange}
-                            secureTextEntry={showPassword ? false : true}
-                            />
-                        </ThemedView>
-                        <ThemeIcon name={showConfirmPassword ? 'eye' : 'eye-off'} type='ionic' onPress={() => setShowPassword(!showConfirmPassword)} />
+                          <ThemedView style={styles.viewPassword}>
+                              <ThemeIcon name='lock' type='ant' />
+                              <Input
+                                type='icon'
+                                label="Password"
+                                value={value}
+                                placeholder='Confirmez votre mot de passe'
+                                onChangeText={onChange}
+                                secureTextEntry={showPassword ? false : true}
+                              />
+                          </ThemedView>
+                          <ThemeIcon name={showConfirmPassword ? 'eye' : 'eye-off'} type='ionic' onPress={() => setShowPassword(!showConfirmPassword)} />
                         </ThemedView>
                     )}
                     name="confirm"
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
       rowGap: 20
     },
     header: {
-      flex: 0.3,
+      flex: 0.5,
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'flex-end'

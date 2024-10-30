@@ -28,7 +28,7 @@ export default function OTP() {
   const handleKeyPress = ({ nativeEvent }, index) => {
     if (nativeEvent.key === 'Backspace' && otp[index] === '') {
       // Move to the previous input if backspace is pressed and input is empty
-      console.log('e')
+      console.log('e');
       if (index > 0) {
         inputRefs.current[index - 1].focus();
       }

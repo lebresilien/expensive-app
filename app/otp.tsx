@@ -64,9 +64,16 @@ export default function OTP() {
           ))}
         </ThemedView>
 
-        <ThemedText style={styles.otpText}>OTP: {otp.join('')}</ThemedText>
+        <TouchableOpacity style={styles.full} onPress={() => router.navigate('/otp')}>
+            <ThemedView style={styles.next_button}>
+                <ThemedText style={styles.textWhite}>
+                    Envoyer
+                </ThemedText>
+            </ThemedView>
+        </TouchableOpacity>
 
       </ThemedView>
+      
     </SafeAreaView>
   );
 }
@@ -74,7 +81,6 @@ export default function OTP() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     paddingTop: StatusBar.currentHeight,
     flexDirection: 'column',
     rowGap: 20,
@@ -84,11 +90,15 @@ const styles = StyleSheet.create({
     flex: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    rowGap: 10
+    rowGap: 20
+  },
+  full: {
+    width: '100%'
   },
   titleBlock: {
-    flex:1,
+    flex: 0.8,
     justifyContent: 'center',
+    alignItems: 'center'
   },
   link: {
     marginTop: 15,
@@ -115,5 +125,15 @@ const styles = StyleSheet.create({
   otpText: {
     marginTop: 20,
     fontSize: 16,
+  },
+  next_button: {
+    width: '100%',
+    borderRadius: 50,
+    padding: 10,
+    backgroundColor: '#0ea5e9',
+    alignItems: 'center'
+  },
+  textWhite: {
+    color: 'white'
   },
 });

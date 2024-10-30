@@ -1,0 +1,450 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rend correctement 1`] = `
+<RCTSafeAreaView
+  style={
+    {
+      "flex": 1,
+      "justifyContent": "center",
+      "paddingTop": null,
+    }
+  }
+>
+  <View
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+        },
+        {
+          "alignItems": "center",
+          "flex": 0.7,
+          "flexDirection": "column",
+        },
+      ]
+    }
+  >
+    <Image
+      source={1}
+      style={
+        {
+          "height": 100,
+          "width": 100,
+        }
+      }
+    />
+    <Text
+      style={
+        [
+          {
+            "color": "#11181C",
+          },
+          undefined,
+          undefined,
+          {
+            "fontSize": 20,
+            "fontWeight": "700",
+            "lineHeight": 24,
+          },
+          undefined,
+          undefined,
+          undefined,
+        ]
+      }
+    >
+      Expensive-App
+    </Text>
+  </View>
+  <View
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+        },
+        {
+          "flex": 2,
+          "flexDirection": "column",
+          "paddingHorizontal": 10,
+          "rowGap": 20,
+        },
+      ]
+    }
+  >
+    <Text
+      style={
+        [
+          {
+            "color": "#11181C",
+          },
+          undefined,
+          undefined,
+          {
+            "fontSize": 20,
+            "fontWeight": "700",
+            "lineHeight": 24,
+          },
+          undefined,
+          undefined,
+          undefined,
+        ]
+      }
+    >
+      Se connecter
+    </Text>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+          },
+          {
+            "alignItems": "center",
+            "borderColor": "#0ea5e9",
+            "borderRadius": 50,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "height": 43,
+            "paddingHorizontal": 10,
+          },
+        ]
+      }
+    >
+      <Text />
+      <View
+        style={
+          {
+            "gap": 1,
+            "marginVertical": 10,
+          }
+        }
+      >
+        <TextInput
+          autoFocus={true}
+          onChangeText={[Function]}
+          placeholder="Email"
+          selectionColor="#0ea5e9"
+          style={
+            [
+              {
+                "fontSize": 16,
+                "marginLeft": 5,
+                "width": 200,
+              },
+              undefined,
+            ]
+          }
+        />
+      </View>
+    </View>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+          },
+          {
+            "alignItems": "center",
+            "borderColor": "#0ea5e9",
+            "borderRadius": 50,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "height": 43,
+            "paddingHorizontal": 10,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+            },
+            {
+              "alignItems": "center",
+              "flex": 10,
+              "flexDirection": "row",
+            },
+          ]
+        }
+      >
+        <Text />
+        <View
+          style={
+            {
+              "gap": 1,
+              "marginVertical": 10,
+            }
+          }
+        >
+          <TextInput
+            onChangeText={[Function]}
+            placeholder="Mot de passe"
+            secureTextEntry={true}
+            selectionColor="#0ea5e9"
+            style={
+              [
+                {
+                  "fontSize": 16,
+                  "marginLeft": 5,
+                  "width": 200,
+                },
+                undefined,
+              ]
+            }
+          />
+        </View>
+      </View>
+      <Text />
+    </View>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+          },
+          {
+            "alignItems": "flex-end",
+            "marginTop": 5,
+          },
+        ]
+      }
+    >
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "opacity": 1,
+          }
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "color": "#11181C",
+              },
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              {
+                "color": "#000",
+                "fontSize": 16,
+              },
+              undefined,
+            ]
+          }
+        >
+          Mot de passe oublié?
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+          },
+          undefined,
+        ]
+      }
+    >
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={false}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "transparent",
+              },
+              {
+                "alignItems": "center",
+                "backgroundColor": "#0ea5e9",
+                "borderRadius": 50,
+                "padding": 10,
+                "width": "100%",
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "#11181C",
+                },
+                {
+                  "fontSize": 16,
+                  "lineHeight": 24,
+                },
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                {
+                  "color": "white",
+                },
+              ]
+            }
+          >
+            Connexion
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+          },
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "marginTop": 20,
+          },
+        ]
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "color": "#11181C",
+            },
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            {
+              "color": "#000",
+              "fontSize": 16,
+            },
+            undefined,
+          ]
+        }
+      >
+        Vous n'avez pas de compte?
+      </Text>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "opacity": 1,
+          }
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "color": "#11181C",
+              },
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              {
+                "color": "#000",
+                "fontSize": 16,
+              },
+              {
+                "color": "#0ea5e9",
+              },
+            ]
+          }
+        >
+           
+           s'enregistrer
+        </Text>
+      </View>
+    </View>
+  </View>
+</RCTSafeAreaView>
+`;

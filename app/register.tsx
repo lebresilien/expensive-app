@@ -15,7 +15,7 @@ interface FormValues {
     password: string;
     confirm: string
 }
-export default function LoginScreen() {
+export default function RegisterScreen() {
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);

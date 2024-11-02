@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         borderColor: '#0ea5e9',
     },
     inputIcon: {
-        width: 200,
+        width: 320,
         fontSize: 16,
         marginLeft: 5
     },

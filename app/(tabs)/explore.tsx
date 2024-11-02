@@ -1,19 +1,35 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform } from 'react-native';
+import { StyleSheet, Image, Platform, Button } from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { UserContext } from '@/hooks/userContext';
+import { useContext } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../lib/api';
 
 export default function TabTwoScreen() {
+  const { userData, setUserData } = useContext(UserContext);
+
+  const logout = async () => {
+    api.post('logout')
+    .then(async() => {
+      await AsyncStorage.removeItem('@token');
+      await AsyncStorage.removeItem('@name');
+      await AsyncStorage.removeItem('@email');
+      //await AsyncStorage.removeItem('@viewedOnboarding');
+      setUserData(null);
+    })
+  }
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
       headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+        <ThemedText type="title">Explore { userData?.email }</ThemedText>
       </ThemedView>
       <ThemedText>This app includes example code to help you get started.</ThemedText>
       <Collapsible title="File-based routing">
@@ -84,6 +100,10 @@ export default function TabTwoScreen() {
           ),
         })}
       </Collapsible>
+      <Button 
+        title="Deconnexion"
+        onPress={logout}
+      />
     </ParallaxScrollView>
   );
 }

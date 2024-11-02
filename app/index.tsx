@@ -2,19 +2,14 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, SafeAreaView, StyleSheet, StatusBar } from "react-native";
 import LoginScreen from "@/app/login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ThemedView } from "@/components/ThemedView";
 import OnBoarding from "./page-viewer";
+import { Loading } from "@/components/Loading";
+import HomeScreen from "./(tabs)";
 
-const Loading = ({ size }: { size?: number | "small" | "large" }) => {
-  return (
-    <ThemedView>
-      <ActivityIndicator size={size} color={"0ea5e9"} />
-    </ThemedView>
-  );
-};
 export default function Presentation() {
   const [loading, setLoading] = useState(true);
   const [viewedOnboarding, setViewedOnboarding] = useState(false);
+  const [viewedToken, setViewedToken] = useState(false);
 
   const checkOnboarding = async () => {
     try {
@@ -29,22 +24,39 @@ export default function Presentation() {
     }
   };
 
+  const checkToken = async () => {
+    try {
+      const value = await AsyncStorage.getItem("@token");
+      if (value !== null) {
+        setViewedToken(true);
+      }
+    } catch (error) {
+      console.log("Error Token : ", error);
+    }
+  };
+
   useEffect(() => {
     setTimeout(() => {
         checkOnboarding();
      }, 2000)
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      checkToken();
+     }, 2000)
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar animated={true} backgroundColor="#0ea5e9" />
-      {loading ? (
-        <Loading size={"large"} />
-      ) : viewedOnboarding ? (
-        <LoginScreen />
-      ) : (
-        <OnBoarding />
-      )}
+        {loading ? (
+          <Loading size={"large"} />
+        ) : viewedOnboarding ? (
+            viewedToken ? <HomeScreen/> : <LoginScreen /> 
+        ) : (
+          <OnBoarding />
+        )}
     </SafeAreaView>
   );
 }

@@ -1,5 +1,5 @@
 
-import { SafeAreaView, StyleSheet, StatusBar, Image, TouchableOpacity, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
+import { SafeAreaView, StyleSheet, StatusBar, Image, TouchableOpacity, ToastAndroid, TextInput } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -7,25 +7,52 @@ import { useForm, Controller } from "react-hook-form";
 import Input from '@/components/Input';
 import { useRouter } from 'expo-router';
 import { ThemeIcon } from '@/components/ThemeIcon';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { Loading } from '@/components/Loading';
+import api from './lib/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserContext } from '@/hooks/userContext';
 
 interface FormValues {
-    name: string;
-    email: string;
-    password: string;
-    confirm: string
+  name: string
+  email: string
+  password: string
 }
 export default function RegisterScreen() {
 
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const { setUserData } = useContext(UserContext);
     const router = useRouter();
 
     const {
       control,
       handleSubmit,
-      formState: { isValid, isDirty }
+      formState: { isSubmitting, isValid }
     } = useForm<FormValues>();
+
+    const onSubmit = async(data: FormValues) => {
+      api.post('register', {
+        name: data.name,
+        email: data.email,
+        password: data.password
+      })
+        .then(async (res) => {
+          const data = res.data;
+          if(data.success) {
+            await AsyncStorage.setItem("@token", data.data.token);
+            await AsyncStorage.setItem("@name", data.data.name);
+            await AsyncStorage.setItem("@email", data.data.email);
+
+            const user = {name: data.data.name, email: data.data.email};
+            setUserData(user);
+
+            router.navigate('/(tabs)');
+          }          
+        })
+        .catch((err) => {
+          console.log('error', JSON.stringify(err));
+        })
+    } 
 
     return (
         <SafeAreaView style={styles.container}>
@@ -46,13 +73,14 @@ export default function RegisterScreen() {
                     control={control}
                     rules={{
                         required: true,
+                        minLength: 3
                     }}
                     render={({ field: { onChange, value } }) => (
                         <ThemedView style={styles.empty}>
                           <ThemeIcon name='user' />
                           <Input
                               type='icon'
-                              label="Email"
+                              label="Nom"
                               value={value}
                               placeholder='Nom(s) et Prénom(s)'
                               autoFocus
@@ -66,7 +94,11 @@ export default function RegisterScreen() {
                 <Controller
                     control={control}
                     rules={{
-                        required: true,
+                      required: true,
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: "Please enter a valid address email"
+                      }
                     }}
                     render={({ field: { onChange, value } }) => (
                         <ThemedView style={styles.empty}>
@@ -86,7 +118,8 @@ export default function RegisterScreen() {
                 <Controller
                     control={control}
                     rules={{
-                        required: true,
+                      required: true,
+                      minLength: 8
                     }}
                     render={({ field: { onChange, value } }) => (
                         <ThemedView style={styles.empty}>
@@ -107,38 +140,17 @@ export default function RegisterScreen() {
                     name="password"
                 />
 
-                <Controller
-                    control={control}
-                    rules={{
-                        required: true,
-                    }}
-                    render={({ field: { onChange, value } }) => (
-                        <ThemedView style={styles.empty}>
-                          <ThemedView style={styles.viewPassword}>
-                              <ThemeIcon name='lock' type='ant' />
-                              <Input
-                                type='icon'
-                                label="Password"
-                                value={value}
-                                placeholder='Confirmez votre mot de passe'
-                                onChangeText={onChange}
-                                secureTextEntry={showPassword ? false : true}
-                              />
-                          </ThemedView>
-                          <ThemeIcon name={showConfirmPassword ? 'eye' : 'eye-off'} type='ionic' onPress={() => setShowPassword(!showConfirmPassword)} />
-                        </ThemedView>
-                    )}
-                    name="confirm"
-                />
-
                 <ThemedView>
-                <TouchableOpacity>
-                    <ThemedView style={styles.next_button}>
-                    <ThemedText style={styles.textWhite}>
-                        Créer mon compte
-                    </ThemedText>
-                    </ThemedView>
-                </TouchableOpacity>
+                  <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+                      <ThemedView style={[styles.next_button, isValid ? styles.bgBlue : styles.gbGray]}>
+                        {!isSubmitting ? 
+                          <ThemedText style={styles.textWhite}>
+                              Créer mon compte
+                          </ThemedText>:
+                          <Loading size="small" />
+                        }
+                      </ThemedView>
+                  </TouchableOpacity>
                 </ThemedView>
 
             <ThemedView style={styles.account}>
@@ -162,10 +174,10 @@ const styles = StyleSheet.create({
       rowGap: 20
     },
     header: {
-      flex: 0.5,
+      flex: 0.7,
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'flex-end'
+      justifyContent: 'flex-start'
     },
     logo: {
       height: 100,
@@ -185,8 +197,13 @@ const styles = StyleSheet.create({
       width: '100%',
       borderRadius: 50,
       padding: 10,
-      backgroundColor: '#0ea5e9',
       alignItems: 'center'
+    },
+    bgBlue: {
+      backgroundColor: '#0ea5e9',
+    },
+    gbGray: {
+      backgroundColor: '#e5e7eb',
     },
     textWhite: {
       color: 'white'
@@ -207,7 +224,7 @@ const styles = StyleSheet.create({
       borderColor: '#0ea5e9',
       borderRadius: 50,
       paddingHorizontal: 10,
-      height: 43,
+      height: 43
     },
     icon: {
       marginRight: 10,

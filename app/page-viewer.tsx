@@ -4,6 +4,7 @@ import { ThemedView } from '@/components/ThemedView';
 import PagerView from 'react-native-pager-view';
 import { useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function OnBoarding() {
 
@@ -12,8 +13,9 @@ export default function OnBoarding() {
 
     const router = useRouter();
 
-    const goToPage = (index: number) => {
+    const goToPage = async (index: number) => {
       if(index === 3) {
+        await AsyncStorage.setItem("@viewedOnboarding", "true");
         router.navigate('/login');
       }
       pagerRef.current?.setPage(index); 

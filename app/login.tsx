@@ -1,5 +1,5 @@
 
-import { SafeAreaView, StyleSheet, StatusBar, Image, TouchableOpacity, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
+import { SafeAreaView, StyleSheet, StatusBar, Image, TouchableOpacity, KeyboardAvoidingView, Platform, TextInput, Alert } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -8,22 +8,51 @@ import Input from '@/components/Input';
 import { useRouter } from 'expo-router';
 import { ThemeIcon } from '@/components/ThemeIcon';
 import { Colors } from '@/constants/Colors';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import api from './lib/api';
+import { UserContext } from '@/hooks/userContext';
+import { Loading } from '@/components/Loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface FormValues {
-  username: string;
+  email: string;
   password: string;
 }
 export default function LoginScreen() {
 
     const [showPassword, setShowPassword] = useState(false);
+    const { setUserData } = useContext(UserContext);
     const router = useRouter();
 
     const {
       control,
       handleSubmit,
-      formState: { isValid, isDirty }
+      formState: { isSubmitting, isValid }
     } = useForm<FormValues>();
+
+    const onSubmit = async(data: FormValues) => {
+      api.post('login', {
+        email: data.email,
+        password: data.password
+      })
+        .then(async (res) => {
+          const data = res.data;
+          console.log('response', data)
+          if(data.success) {
+            await AsyncStorage.setItem("@token", data.data.token);
+            await AsyncStorage.setItem("@name", data.data.name);
+            await AsyncStorage.setItem("@email", data.data.email);
+
+            const user = {name: data.data.name, email: data.data.email};
+            setUserData(user);
+
+            router.navigate('/(tabs)');
+          }  
+        })
+        .catch(() => {
+          Alert.alert('Identifiants de connexion invalides');
+        })
+    } 
 
     return (
         <SafeAreaView style={styles.container}>
@@ -58,7 +87,7 @@ export default function LoginScreen() {
                   />
                 </ThemedView>
               )}
-              name="username"
+              name="email"
             />
 
             <Controller
@@ -92,11 +121,14 @@ export default function LoginScreen() {
             </ThemedView>
 
             <ThemedView>
-              <TouchableOpacity>
-                <ThemedView style={styles.next_button}>
-                  <ThemedText style={styles.textWhite}>
-                    Connexion
-                  </ThemedText>
+              <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+                <ThemedView style={[styles.next_button, isValid ? styles.bgBlue : styles.gbGray]}>
+                  {!isSubmitting ? 
+                    <ThemedText style={styles.textWhite}>
+                      Connexion
+                    </ThemedText>:
+                    <Loading size="small" />
+                  }
                 </ThemedView>
               </TouchableOpacity>
             </ThemedView>
@@ -143,11 +175,16 @@ const styles = StyleSheet.create({
       width: '100%',
       borderRadius: 50,
       padding: 10,
-      backgroundColor: '#0ea5e9',
       alignItems: 'center'
     },
     textWhite: {
       color: 'white'
+    },
+    bgBlue: {
+      backgroundColor: '#0ea5e9',
+    },
+    gbGray: {
+      backgroundColor: '#e5e7eb',
     },
     account: {
       marginTop: 20,

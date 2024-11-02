@@ -7,12 +7,25 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { UserContext } from '@/hooks/userContext';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../lib/api';
 
 export default function TabTwoScreen() {
   const { userData, setUserData } = useContext(UserContext);
+
+  const checkToken = async () => {
+    try {
+      const value = await AsyncStorage.getItem("@viewedOnboarding");
+      console.log('boardnsssf', value)
+    } catch (error) {
+      console.log("Error Token : ", error);
+    }
+  };
+
+  useEffect(()  => {
+    checkToken()
+  })
 
   const logout = async () => {
     api.post('logout')

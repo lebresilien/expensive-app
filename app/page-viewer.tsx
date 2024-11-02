@@ -22,7 +22,8 @@ export default function OnBoarding() {
       setPosition(index);
     }
 
-    const skip = () => {
+    const skip = async() => {
+      await AsyncStorage.setItem("@viewedOnboarding", "true");
       router.navigate('/login');
     }
 

@@ -30,27 +30,28 @@ export default function LoginScreen() {
       formState: { isSubmitting, isValid }
     } = useForm<FormValues>();
 
-    const onSubmit = async(data: FormValues) => {
+    const onSubmit = (data: FormValues) => {
       api.post('login', {
         email: data.email,
         password: data.password
       })
         .then(async (res) => {
-          const data = res.data;
-          console.log('response', data)
-          if(data.success) {
-            await AsyncStorage.setItem("@token", data.data.token);
-            await AsyncStorage.setItem("@name", data.data.name);
-            await AsyncStorage.setItem("@email", data.data.email);
+          //console.log('uuuuuuuuuuuuuuuuuu', res.data.data.token);
+          const data = res.data.data;
+          if(res.data.success) {
+            await AsyncStorage.setItem("@token", data.token);
+            await AsyncStorage.setItem("@name", data.name);
+            await AsyncStorage.setItem("@email", data.email);
 
-            const user = {name: data.data.name, email: data.data.email};
+            const user = {name: data.name, email: data.email};
             setUserData(user);
 
             router.navigate('/(tabs)');
-          }  
+          }
         })
-        .catch(() => {
-          Alert.alert('Identifiants de connexion invalides');
+        .catch((err) => {
+          //console.error('message', JSON.stringify(err))
+          Alert.alert('Identifiants de connexion vqlise');
         })
     } 
 

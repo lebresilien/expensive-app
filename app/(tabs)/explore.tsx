@@ -10,9 +10,11 @@ import { UserContext } from '@/hooks/userContext';
 import { useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../lib/api';
+import { useRouter } from 'expo-router';
 
 export default function TabTwoScreen() {
   const { userData, setUserData } = useContext(UserContext);
+  const router = useRouter();
 
   const checkToken = async () => {
     try {
@@ -35,6 +37,7 @@ export default function TabTwoScreen() {
       await AsyncStorage.removeItem('@email');
       //await AsyncStorage.removeItem('@viewedOnboarding');
       setUserData(null);
+      router.push('/login');
     })
   }
   return (

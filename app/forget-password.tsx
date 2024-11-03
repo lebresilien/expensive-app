@@ -1,5 +1,5 @@
 import { Link, Stack } from 'expo-router';
-import { SafeAreaView, StatusBar, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -7,20 +7,46 @@ import { useForm, Controller } from "react-hook-form";
 import { ThemeIcon } from '@/components/ThemeIcon';
 import Input from '@/components/Input';
 import { useRouter } from 'expo-router';
+import api from './lib/api';
+import { Loading } from '@/components/Loading';
 
 interface FormValues {
-    email: string
+  email: string
 }
 
-export default function ForgetPassword() {
+export default function 
+
+
+ForgetPassword() {
 
     const router = useRouter();
 
     const {
         control,
         handleSubmit,
-        formState: { isValid, isDirty }
+        formState: { isSubmitting, isValid }
     } = useForm<FormValues>();
+
+    const onSubmit = (data: FormValues) => {
+      api.post('password/email', {
+        email: data.email
+      })
+      .then((res) => {
+        if(res.data.success) {
+          router.navigate({ pathname: '/otp', 
+            params: {
+              email: data.email
+            } 
+          })
+        } else {
+          Alert.alert('Une erreur innattendue est survenue');
+        }
+      })
+      .catch((err) => {
+        //console.log('ooooooooooooo', JSON.stringify(err))
+        Alert.alert('Cette adresse ne correspond à aucun utilisateur');
+      })
+    }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -35,7 +61,7 @@ export default function ForgetPassword() {
         <Controller
             control={control}
             rules={{
-            required: true,
+              required: true,
             }}
             render={({ field: { onChange, value } }) => (
             <ThemedView style={styles.empty}>
@@ -53,11 +79,14 @@ export default function ForgetPassword() {
             name="email"
         />
 
-        <TouchableOpacity style={{width: '100%'}} onPress={() => router.navigate('/otp')}>
-            <ThemedView style={styles.next_button}>
-                <ThemedText style={styles.textWhite}>
+        <TouchableOpacity style={{width: '100%'}}  onPress={handleSubmit(onSubmit)}>
+            <ThemedView style={[styles.next_button, isValid ? styles.bgBlue : styles.gbGray]}>
+              {!isSubmitting ?
+                  <ThemedText style={styles.textWhite}>
                     Envoyer
-                </ThemedText>
+                  </ThemedText>:
+                  <Loading size="small" />
+              }
             </ThemedView>
         </TouchableOpacity>
 
@@ -99,7 +128,6 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 50,
     padding: 10,
-    backgroundColor: '#0ea5e9',
     alignItems: 'center'
   },
   textWhite: {
@@ -114,4 +142,10 @@ const styles = StyleSheet.create({
   primay_color: {
     color: '#0ea5e9'
   },
+  bgBlue: {
+    backgroundColor: '#0ea5e9',
+  },
+  gbGray: {
+    backgroundColor: '#e5e7eb',
+  }
 });

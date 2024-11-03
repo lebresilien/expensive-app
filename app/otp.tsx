@@ -2,17 +2,20 @@ import { SafeAreaView, StatusBar, StyleSheet, TextInput, TouchableOpacity } from
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams  } from 'expo-router';
 import { useRef, useState } from 'react';
 
 export default function OTP() {
 
     const router = useRouter();
+    const params = useLocalSearchParams();
+    const { email } = params;
     const [otp, setOtp] = useState(['', '', '', '']); // Array to store OTP digits
     const inputRefs = useRef([]); // Refs for each input field
-
+    console.log('jhhh', email);
+    alert(email)
       // Handle text change
-  const handleChangeText = (text, index) => {
+  const handleChangeText = (text: string, index: number) => {
     const newOtp = [...otp];
     newOtp[index] = text; // Update the corresponding index
 
@@ -20,16 +23,17 @@ export default function OTP() {
 
     // Move to the next input if a digit is entered and we're not at the last field
     if (text && index < otp.length - 1) {
+      //@ts-ignore
       inputRefs.current[index + 1].focus();
     }
   };
 
   // Handle backspace
-  const handleKeyPress = ({ nativeEvent }, index) => {
+  const handleKeyPress = (nativeEvent: any , index: number) => {
     if (nativeEvent.key === 'Backspace' && otp[index] === '') {
       // Move to the previous input if backspace is pressed and input is empty
-      console.log('e');
       if (index > 0) {
+        //@ts-ignore
         inputRefs.current[index - 1].focus();
       }
     }
@@ -59,6 +63,7 @@ export default function OTP() {
               onKeyPress={(e) => handleKeyPress(e, index)}
               keyboardType="numeric"
               maxLength={1}
+              //@ts-ignore
               ref={(ref) => (inputRefs.current[index] = ref)} // Assign refs to inputs
             />
           ))}

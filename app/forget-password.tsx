@@ -14,10 +14,7 @@ interface FormValues {
   email: string
 }
 
-export default function 
-
-
-ForgetPassword() {
+export default function ForgetPassword() {
 
     const router = useRouter();
 
@@ -33,17 +30,13 @@ ForgetPassword() {
       })
       .then((res) => {
         if(res.data.success) {
-          router.navigate({ pathname: '/otp', 
-            params: {
-              email: data.email
-            } 
-          })
+          router.navigate('/otp')
         } else {
           Alert.alert('Une erreur innattendue est survenue');
         }
       })
       .catch((err) => {
-        //console.log('ooooooooooooo', JSON.stringify(err))
+        //console.log('eee', err.response.status)
         Alert.alert('Cette adresse ne correspond à aucun utilisateur');
       })
     }
@@ -79,7 +72,7 @@ ForgetPassword() {
             name="email"
         />
 
-        <TouchableOpacity style={{width: '100%'}}  onPress={handleSubmit(onSubmit)}>
+        <TouchableOpacity style={{width: '100%'}} onPress={handleSubmit(onSubmit)}>
             <ThemedView style={[styles.next_button, isValid ? styles.bgBlue : styles.gbGray]}>
               {!isSubmitting ?
                   <ThemedText style={styles.textWhite}>

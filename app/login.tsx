@@ -5,7 +5,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useForm, Controller } from "react-hook-form";
 import Input from '@/components/Input';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ThemeIcon } from '@/components/ThemeIcon';
 import { Colors } from '@/constants/Colors';
 import { useContext, useState } from 'react';
@@ -23,6 +23,9 @@ export default function LoginScreen() {
     const [showPassword, setShowPassword] = useState(false);
     const { setUserData } = useContext(UserContext);
     const router = useRouter();
+    const params = useLocalSearchParams();
+    const { reset } = params;
+    reset && alert('Votre mot de  a été misgd à jour');
 
     const {
       control,

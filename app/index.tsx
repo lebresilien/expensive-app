@@ -5,11 +5,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import OnBoarding from "./page-viewer";
 import { Loading } from "@/components/Loading";
 import HomeScreen from "./(tabs)";
+import TabLayout from "./(tabs)/_layout";
+import { router } from "expo-router";
 
 export default function Presentation() {
   const [loading, setLoading] = useState(true);
   const [viewedOnboarding, setViewedOnboarding] = useState(false);
-  const [viewedToken, setViewedToken] = useState(false);
+  //const [viewedToken, setViewedToken] = useState(false);
 
   const checkOnboarding = async () => {
     try {
@@ -28,7 +30,9 @@ export default function Presentation() {
     try {
       const value = await AsyncStorage.getItem("@token");
       if (value !== null) {
-        setViewedToken(true);
+        //console.log('token', value)
+        router.replace('/(tabs)');
+        //setViewedToken(true);
       }
     } catch (error) {
       console.log("Error Token : ", error);
@@ -53,7 +57,7 @@ export default function Presentation() {
         {loading ? (
           <Loading size={"large"} />
         ) : viewedOnboarding ? (
-            viewedToken ? <HomeScreen/> : <LoginScreen /> 
+            <LoginScreen /> 
         ) : (
           <OnBoarding />
         )}

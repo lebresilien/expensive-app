@@ -1,5 +1,5 @@
-import { Link, Stack } from 'expo-router';
-import { SafeAreaView, StatusBar, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Link, Stack, useLocalSearchParams } from 'expo-router';
+import { SafeAreaView, StatusBar, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -8,6 +8,8 @@ import { ThemeIcon } from '@/components/ThemeIcon';
 import Input from '@/components/Input';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { Loading } from '@/components/Loading';
+import api from './lib/api';
 
 interface FormValues {
     password: string
@@ -19,12 +21,36 @@ export default function ForgetPassword() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const router = useRouter();
+    const params = useLocalSearchParams();
+    const { code } = params;
 
     const {
         control,
         handleSubmit,
-        formState: { isValid, isDirty }
+        formState: { isValid, isSubmitting }
     } = useForm<FormValues>();
+
+    const onSubmit = (data: FormValues) => {
+      api.post('password/reset', {
+        password: data.password,
+        password_confirmation: data.confirm,
+        code: code
+      })
+      .then((res) => {
+        if(res.data.success) {
+          router.push({ pathname: '/login', 
+            params: {
+              reset: '1'
+            } 
+          })
+        } else {
+          Alert.alert('Une erreur innattendue est survenue');
+        }
+      })
+      .catch((err) => {
+        Alert.alert( err.response.data.message);
+      })
+    }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -85,11 +111,14 @@ export default function ForgetPassword() {
             name="confirm"
         />
 
-        <TouchableOpacity style={{width: '100%'}} onPress={() => router.navigate('/otp')}>
-            <ThemedView style={styles.next_button}>
+        <TouchableOpacity style={{width: '100%'}} onPress={handleSubmit(onSubmit)}>
+            <ThemedView style={[styles.next_button, isValid ? styles.bgBlue : styles.gbGray]}>
+              {!isSubmitting ?
                 <ThemedText style={styles.textWhite}>
                     Renitialiser
-                </ThemedText>
+                </ThemedText>:
+                <Loading size="small" />
+              }
             </ThemedView>
         </TouchableOpacity>
 
@@ -124,7 +153,6 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 50,
     padding: 10,
-    backgroundColor: '#0ea5e9',
     alignItems: 'center'
   },
   textWhite: {
@@ -143,5 +171,11 @@ const styles = StyleSheet.create({
     flex: 10,
     flexDirection: 'row',
     alignItems: 'center'  
+  },
+  bgBlue: {
+    backgroundColor: '#0ea5e9',
+  },
+  gbGray: {
+    backgroundColor: '#e5e7eb',
   }
 });

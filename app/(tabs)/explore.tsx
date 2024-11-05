@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform, Button } from 'react-native';
+import { StyleSheet, Image, Platform, Button, Alert } from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -30,6 +30,7 @@ export default function TabTwoScreen() {
   })
 
   const logout = async () => {
+    console.log('inside')
     api.post('logout')
     .then(async() => {
       await AsyncStorage.removeItem('@token');
@@ -38,6 +39,9 @@ export default function TabTwoScreen() {
       //await AsyncStorage.removeItem('@viewedOnboarding');
       setUserData(null);
       router.push('/login');
+    })
+    .catch((err) => {
+      Alert.alert('Une erreur est survenue');
     })
   }
   return (

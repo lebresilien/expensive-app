@@ -9,6 +9,7 @@ import Input from '@/components/Input';
 import { useRouter } from 'expo-router';
 import api from './lib/api';
 import { Loading } from '@/components/Loading';
+import { useState } from 'react';
 
 interface FormValues {
   email: string
@@ -16,15 +17,19 @@ interface FormValues {
 
 export default function ForgetPassword() {
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
     const {
         control,
         handleSubmit,
-        formState: { isSubmitting, isValid }
+        formState: { isValid }
     } = useForm<FormValues>();
 
     const onSubmit = (data: FormValues) => {
+
+      setIsSubmitting(true);
+
       api.post('password/email', {
         email: data.email
       })
@@ -35,9 +40,11 @@ export default function ForgetPassword() {
           Alert.alert('Une erreur innattendue est survenue');
         }
       })
-      .catch((err) => {
-        //console.log('eee', err.response.status)
+      .catch(() => {
         Alert.alert('Cette adresse ne correspond à aucun utilisateur');
+      })
+      .finally(() => {
+        setIsSubmitting(false)
       })
     }
 

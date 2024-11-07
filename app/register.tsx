@@ -20,6 +20,7 @@ interface FormValues {
 }
 export default function RegisterScreen() {
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const { setUserData } = useContext(UserContext);
     const router = useRouter();
@@ -27,31 +28,37 @@ export default function RegisterScreen() {
     const {
       control,
       handleSubmit,
-      formState: { isSubmitting, isValid }
+      formState: { isValid }
     } = useForm<FormValues>();
 
     const onSubmit = async(data: FormValues) => {
+
+      setIsSubmitting(true);
+      
       api.post('register', {
         name: data.name,
         email: data.email,
         password: data.password
       })
-        .then(async (res) => {
-          const data = res.data;
-          if(data.success) {
-            await AsyncStorage.setItem("@token", data.data.token);
-            await AsyncStorage.setItem("@name", data.data.name);
-            await AsyncStorage.setItem("@email", data.data.email);
+      .then(async (res) => {
+        const data = res.data;
+        if(data.success) {
+          await AsyncStorage.setItem("@token", data.data.token);
+          await AsyncStorage.setItem("@name", data.data.name);
+          await AsyncStorage.setItem("@email", data.data.email);
 
-            const user = {name: data.data.name, email: data.data.email};
-            setUserData(user);
+          const user = {name: data.data.name, email: data.data.email};
+          setUserData(user);
 
-            router.navigate('/(tabs)');
-          }          
-        })
-        .catch((err) => {
-          console.log('error', JSON.stringify(err));
-        })
+          router.navigate('/(tabs)');
+        }          
+      })
+      .catch((err) => {
+        console.log('error', JSON.stringify(err));
+      })
+      .finally(() => {
+        setIsSubmitting(false)
+      })
     } 
 
     return (

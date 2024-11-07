@@ -7,7 +7,6 @@ import { useForm, Controller } from "react-hook-form";
 import Input from '@/components/Input';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ThemeIcon } from '@/components/ThemeIcon';
-import { Colors } from '@/constants/Colors';
 import { useContext, useState } from 'react';
 import api from './lib/api';
 import { UserContext } from '@/hooks/userContext';
@@ -21,45 +20,56 @@ interface FormValues {
 export default function LoginScreen() {
 
     const [showPassword, setShowPassword] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { setUserData } = useContext(UserContext);
+
     const router = useRouter();
     const params = useLocalSearchParams();
     const { reset } = params;
-    reset && alert('Votre mot de  a été misgd à jour');
+
+    reset && alert('Votre mot de a été mis à jour');
 
     const {
       control,
       handleSubmit,
-      formState: { isSubmitting, isValid }
+      formState: { isValid }
     } = useForm<FormValues>();
 
     const onSubmit = (data: FormValues) => {
+
+      setIsSubmitting(true);
+
       api.post('login', {
         email: data.email,
         password: data.password
       })
-        .then(async (res) => {
-          //console.log('uuuuuuuuuuuuuuuuuu', res.data.data.token);
-          const data = res.data.data;
-          if(res.data.success) {
-            await AsyncStorage.setItem("@token", data.token);
-            await AsyncStorage.setItem("@name", data.name);
-            await AsyncStorage.setItem("@email", data.email);
+      .then(async (res) => {
+        //console.log('uuuuuuuuuuuuuuuuuu', res.data.data.token);
+        const data = res.data.data;
+        if(res.data.success) {
+          await AsyncStorage.setItem("@token", data.token);
+          await AsyncStorage.setItem("@name", data.name);
+          await AsyncStorage.setItem("@email", data.email);
 
-            const user = {name: data.name, email: data.email};
-            setUserData(user);
+          const user = {name: data.name, email: data.email};
+          setUserData(user);
 
-            router.navigate('/(tabs)');
-          }
-        })
-        .catch((err) => {
-          //console.error('message', JSON.stringify(err))
-          Alert.alert('Identifiants de connexion vqlise');
-        })
+          router.navigate('/(tabs)');
+        }
+      })
+      .catch(() => {
+        //console.error('message', JSON.stringify(err))
+        Alert.alert('Identifiants de connexion non valides');
+      })
+      .finally(() => {
+        setIsSubmitting(false)
+      })
     } 
 
     return (
         <SafeAreaView style={styles.container}>
+
+          <StatusBar animated={true} backgroundColor="#0ea5e9" />
        
           <ThemedView style={styles.header}>
             <Image

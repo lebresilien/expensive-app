@@ -17,6 +17,7 @@ export default function Presentation() {
     try {
       const value = await AsyncStorage.getItem("@viewedOnboarding");
       if (value !== null) {
+        router.replace('/login');
         setViewedOnboarding(true);
       }
     } catch (error) {
@@ -56,9 +57,9 @@ export default function Presentation() {
       <StatusBar animated={true} backgroundColor="#0ea5e9" />
         {loading ? (
           <Loading size={"large"} />
-        ) : viewedOnboarding ? (
-            <LoginScreen /> 
-        ) : (
+        ) : /* viewedOnboarding ? (
+            <LoginScreen from='index' /> 
+        ) : */ (
           <OnBoarding />
         )}
     </SafeAreaView>

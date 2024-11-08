@@ -6,8 +6,9 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useEffect, useState } from "react";
 import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 import * as Progress from 'react-native-progress';
-import api from "../lib/api";
+import api from "../../lib/api";
 import { Loading } from "@/components/Loading";
+import { router } from "expo-router";
 
 type ThemedTextProps = {
     lightColor?: string;
@@ -73,7 +74,7 @@ export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps)
         }
         const interval = setTimeout(() => {
             fetchData();
-        }, 5000);
+        }, 1000);
         return () => clearInterval(interval);
     }, [gaols])
 
@@ -84,7 +85,7 @@ export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps)
                     <ThemeIcon name='chevron-back' type='ionic' />
                     <ThemedText type='subtitle'>Settings</ThemedText>
                 </ThemedView>
-                <ThemeIcon name='add' type='ionic' />
+                <ThemeIcon name='add' type='ionic' onPress={() => router.navigate('modal')} />
             </ThemedView>
             <ThemedView>
                 <ThemedText type='title'>Objectifs Financiers</ThemedText>

@@ -23,7 +23,7 @@ export const ThemeIcon = ({
         <>
             {type === 'default' && <Entypo size={17} color={color} name={name} onPress={onPress}  /> }
             {type === 'ant' && <AntDesign size={17} color={color} name={name} onPress={onPress} /> }
-            {type === 'ionic' && <Ionicons size={17} color={color} name={name} onPress={onPress} /> }
+            {type === 'ionic' && <Ionicons size={20} color={color} name={name} onPress={onPress} /> }
         </>
     );
 }

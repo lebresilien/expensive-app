@@ -9,9 +9,11 @@ export default function StackLayout() {
     const colorScheme = useColorScheme();
 
     return (
-        <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: 'modal'}} />
+        <Stack screenOptions={{
+            headerShown: false
+        }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="modal" options={{ presentation: 'modal', animation: 'slide_from_bottom'}} />
         </Stack>
     )
 }

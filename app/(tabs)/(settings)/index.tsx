@@ -3,12 +3,13 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemeIcon } from "@/components/ThemeIcon";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 import * as Progress from 'react-native-progress';
 import api from "../../lib/api";
 import { Loading } from "@/components/Loading";
 import { router } from "expo-router";
+import { TabDisplayContext } from "@/hooks/useTabDisplay";
 
 type ThemedTextProps = {
     lightColor?: string;
@@ -55,6 +56,7 @@ const GoalItem = (
 
 export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps) {
 
+    const { setDisplay } = useContext(TabDisplayContext);
     const [gaols, setGoals] = useState<Goal[]>([]);
     const [loading, setLoading] = useState(true);
     const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
@@ -76,7 +78,12 @@ export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps)
             fetchData();
         }, 1000);
         return () => clearInterval(interval);
-    }, [gaols])
+    }, [gaols]);
+
+    const add = () => {
+        setDisplay('none');
+        router.navigate('/modal');
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -85,7 +92,7 @@ export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps)
                     <ThemeIcon name='chevron-back' type='ionic' />
                     <ThemedText type='subtitle'>Settings</ThemedText>
                 </ThemedView>
-                <ThemeIcon name='add' type='ionic' onPress={() => router.navigate('modal')} />
+                <ThemeIcon name='add' type='ionic' onPress={add} />
             </ThemedView>
             <ThemedView>
                 <ThemedText type='title'>Objectifs Financiers</ThemedText>

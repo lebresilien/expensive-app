@@ -6,7 +6,7 @@ interface CustomInputProps extends TextInputProps {
     errorMessage?: FieldError;
     type?: 'default' | 'icon'
 }
-const Input: React.FC<CustomInputProps> = ({ label, errorMessage, type='default', ...props }) => {
+const Input: React.FC<CustomInputProps> = ({ style, label, errorMessage, type='default', ...props }) => {
     return (
         <>
             {type === 'default' ?
@@ -14,7 +14,7 @@ const Input: React.FC<CustomInputProps> = ({ label, errorMessage, type='default'
                     {label && <Text style={styles.label}>{label}</Text>}
                     <TextInput
                         // @ts-ignore
-                        style={[styles.input, errorMessage && styles.inputError]}
+                        style={[styles.input, errorMessage && styles.inputError, style]}
                         selectionColor='#0ea5e9'
                         {...props}
                     />

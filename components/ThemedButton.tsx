@@ -30,7 +30,18 @@ export default function ThemedButton({
             ]}
             {...rest}
         >
-            <ThemedText type='button'>{title}</ThemedText>
+            {isValid ?
+                <ThemedText 
+                    type={type === 'cancel' ? 'button-cancel' : 'button'}
+                >
+                    {title}
+                </ThemedText>:
+                <ThemedText 
+                    type={'button-cancel'}
+                >
+                    {title}
+                </ThemedText>
+            }
         </Pressable>
     )
 }

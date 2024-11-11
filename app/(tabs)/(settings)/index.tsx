@@ -68,17 +68,14 @@ export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps)
                 setGoals(res.data.data);
             })
             .catch(() => {
-                alert('error')
+                alert('error vv')
             })
             .finally(() => {
                 setLoading(false);
             })
         }
-        const interval = setTimeout(() => {
-            fetchData();
-        }, 1000);
-        return () => clearInterval(interval);
-    }, [gaols]);
+        fetchData();
+    }, []);
 
     const add = () => {
         setDisplay('none');

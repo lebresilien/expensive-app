@@ -12,6 +12,7 @@ import { StyleSheet, StatusBar, Pressable } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import api from '@/app/lib/api';
 import { Loading } from '@/components/Loading';
+import { GoalContext } from '@/hooks/useGoal';
 
 type ThemedTextProps = {
     lightColor?: string;
@@ -29,10 +30,11 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", 
 export default function Modal({ lightColor, darkColor}: ThemedTextProps) {
    
     const [date, setDate] = useState(new Date());
-    //const [date, setDate] = useState(day.getDate() + ' ' + months[day.getMonth()] + ' ' + day.getFullYear());
     const [show, setShow] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
     const { setDisplay } = useContext(TabDisplayContext);
+    const { goals, setGoals } = useContext(GoalContext);
     const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
     
     const cancel = () => {
@@ -60,7 +62,16 @@ export default function Modal({ lightColor, darkColor}: ThemedTextProps) {
         })
         .then((res) => {
             if(res.data.success) {
-                console.log(res.data.data)
+                setGoals([
+                    ...goals,
+                    {
+                        id: res.data.data.id,
+                        name: res.data.data.name,
+                        amount: res.data.data.amount,
+                        expiredAt: res.data.data.expiredAt,
+                        savingAmount: 0, 
+                    }
+                ]) 
                 router.back();
             }
         })

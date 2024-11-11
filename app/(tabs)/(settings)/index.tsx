@@ -4,23 +4,25 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemeIcon } from "@/components/ThemeIcon";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useContext, useEffect, useState } from "react";
-import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet } from "react-native";
 import * as Progress from 'react-native-progress';
 import api from "../../lib/api";
 import { Loading } from "@/components/Loading";
 import { router } from "expo-router";
 import { TabDisplayContext } from "@/hooks/useTabDisplay";
+import { GoalContext } from "@/hooks/useGoal";
 
 type ThemedTextProps = {
     lightColor?: string;
     darkColor?: string;
 };
 
-type Goal = {
+export type Goal = {
     id: string
     name: string
     amount: number
     savingAmount: number
+    expiredAt: string
 }
 
 const GoalItem = (
@@ -28,14 +30,17 @@ const GoalItem = (
         id, 
         name, 
         amount, 
-        currentAmount, 
+        savingAmount,
+        expiredAt, 
         lightColor, 
-        darkColor }: 
+        darkColor 
+    }: 
     { 
         id: string, 
         name: string, 
         amount: number, 
-        currentAmount: number, 
+        savingAmount: number, 
+        expiredAt: string,
         lightColor?: string, 
         darkColor?: string 
     }
@@ -44,9 +49,9 @@ const GoalItem = (
     return (
         <ThemedView style={styles.itemContainer}>
             <ThemedText type="defaultSemiBold">{ name }</ThemedText>
-            <Progress.Bar progress={(currentAmount / amount)} width={null} color={color} />
+            <Progress.Bar progress={(savingAmount / amount)} width={null} color={color} />
             <ThemedView style={styles.percent}>
-                <ThemedText type='link'>{ currentAmount } fcfa</ThemedText>
+                <ThemedText type='link'>{ savingAmount } fcfa</ThemedText>
                 <ThemedText type='link' style={{fontWeight: '700'}}>{ amount } fcfa</ThemedText>
             </ThemedView>
             <ThemedText type='link' style={styles.advice}>Chaque piéce compte</ThemedText> 
@@ -56,11 +61,11 @@ const GoalItem = (
 
 export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps) {
 
+    const { goals, setGoals } = useContext(GoalContext);
     const { setDisplay } = useContext(TabDisplayContext);
-    const [gaols, setGoals] = useState<Goal[]>([]);
+
     const [loading, setLoading] = useState(true);
     const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
-
     useEffect(() => {
         const fetchData = () => {
             api.get('goals')
@@ -98,19 +103,20 @@ export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps)
             {loading ? 
                 <Loading />
                 :
-                <ThemedView style={[{ backgroundColor }, styles.list]}>
-                    {gaols.map((item, index) => (
+                <ScrollView style={[{ backgroundColor }, styles.list]}>
+                    {goals.map((item, index) => (
                         <ThemedView key={index} >
                             <GoalItem
                                 id={item.id}
                                 name={item.name}
-                                currentAmount={item.savingAmount}
+                                savingAmount={item.savingAmount}
                                 amount={item.amount}
+                                expiredAt={item.expiredAt}
                             />
-                            { (index + 1) < gaols.length && <ThemedView style={styles.line}></ThemedView>}
+                            { (index + 1) < goals.length && <ThemedView style={styles.line}></ThemedView>}
                         </ThemedView>
                     ))}
-                </ThemedView>
+                </ScrollView>
             }
         </SafeAreaView>
     )
@@ -138,7 +144,8 @@ const styles = StyleSheet.create({
         rowGap: 10,
         paddingHorizontal: 10,
         paddingVertical: 10,
-        borderRadius: 10
+        borderRadius: 10,
+        marginBottom: 20
     },
     itemContainer: {
         paddingBottom: 10,

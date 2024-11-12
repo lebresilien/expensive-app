@@ -4,7 +4,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemeIcon } from "@/components/ThemeIcon";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useContext, useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet } from "react-native";
+import { Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet } from "react-native";
 import * as Progress from 'react-native-progress';
 import api from "../../lib/api";
 import { Loading } from "@/components/Loading";
@@ -22,46 +22,46 @@ export type Goal = {
     name: string
     amount: number
     savingAmount: number
-    expiredAt: string
+    expiredAt: string,
+    savings: {
+        amount: number
+        day: string
+    }[]
 }
 
 const GoalItem = (
     { 
-        id, 
-        name, 
-        amount, 
-        savingAmount,
-        expiredAt, 
+        goal,
+        handlePointerEnter,
         lightColor, 
         darkColor 
     }: 
     { 
-        id: string, 
-        name: string, 
-        amount: number, 
-        savingAmount: number, 
-        expiredAt: string,
+        goal: Goal,
+        handlePointerEnter: (goal: Goal) => void,
         lightColor?: string, 
         darkColor?: string 
     }
     ) => {
     const color = useThemeColor({ light: lightColor, dark: darkColor }, 'tint');
     return (
-        <ThemedView style={styles.itemContainer}>
-            <ThemedText type="defaultSemiBold">{ name }</ThemedText>
-            <Progress.Bar progress={(savingAmount / amount)} width={null} color={color} />
-            <ThemedView style={styles.percent}>
-                <ThemedText type='link'>{ savingAmount } fcfa</ThemedText>
-                <ThemedText type='link' style={{fontWeight: '700'}}>{ amount } fcfa</ThemedText>
+        <Pressable onPress={() => handlePointerEnter(goal)}>
+            <ThemedView style={styles.itemContainer}>
+                <ThemedText type="defaultSemiBold">{ goal.name }</ThemedText>
+                <Progress.Bar progress={(goal.savingAmount / goal.amount)} width={null} color={color} />
+                <ThemedView style={styles.percent}>
+                    <ThemedText type='link'>{ goal.savingAmount } fcfa</ThemedText>
+                    <ThemedText type='link' style={{fontWeight: '700'}}>{ goal.amount } fcfa</ThemedText>
+                </ThemedView>
+                <ThemedText type='link' style={styles.advice}>Chaque piéce compte</ThemedText> 
             </ThemedView>
-            <ThemedText type='link' style={styles.advice}>Chaque piéce compte</ThemedText> 
-        </ThemedView>  
+        </Pressable> 
     )
 }
 
 export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps) {
 
-    const { goals, setGoals } = useContext(GoalContext);
+    const { goals, setGoals, current, setCurrent } = useContext(GoalContext);
     const { setDisplay } = useContext(TabDisplayContext);
 
     const [loading, setLoading] = useState(true);
@@ -87,6 +87,22 @@ export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps)
         router.navigate('/modal');
     }
 
+    const handlePointerEnter = (goal: Goal) => {
+        setCurrent(goal);
+        // @ts-ignore
+        router.navigate('/[id]');
+        // @ts-ignore
+        /* router.navigate({pathname: '/[id]',
+            params: {
+                id: id,
+                name: name,
+                amount: amount,
+                savingAmount: savingAmount,
+                expiredAt: expiredAt
+            }
+        }) */
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <ThemedView style={styles.bar}>
@@ -107,11 +123,8 @@ export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps)
                     {goals.map((item, index) => (
                         <ThemedView key={index} >
                             <GoalItem
-                                id={item.id}
-                                name={item.name}
-                                savingAmount={item.savingAmount}
-                                amount={item.amount}
-                                expiredAt={item.expiredAt}
+                                goal={item}
+                                handlePointerEnter={handlePointerEnter}
                             />
                             { (index + 1) < goals.length && <ThemedView style={styles.line}></ThemedView>}
                         </ThemedView>
@@ -158,8 +171,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     line: {
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee'  
+        borderBottomWidth: 0.2,
+        borderBottomColor: '#d4d4d4'  
     },
     advice: {
         fontSize: 14

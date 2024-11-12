@@ -5,7 +5,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link' | 'button' | 'button-cancel';
+  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link' | 'button' | 'button-cancel' | 'delete';
 };
 
 export function ThemedText({
@@ -28,6 +28,7 @@ export function ThemedText({
         type === 'link' ? styles.link : undefined,
         type === 'button-cancel' ? styles.buttonCancel : undefined,
         type === 'button' ? styles.button : undefined,
+        type === 'delete' ? styles.delete : undefined,
         style,
       ]}
       {...rest}
@@ -69,4 +70,9 @@ const styles = StyleSheet.create({
     color: '#0ea5e9',
     fontWeight: 'bold'
   },
+  delete: {
+    fontSize: 15,
+    color: '#dc2626',
+    fontWeight: 'bold'
+  }
 });

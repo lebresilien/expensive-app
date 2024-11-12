@@ -69,14 +69,14 @@ export default function Modal({ lightColor, darkColor}: ThemedTextProps) {
                         name: res.data.data.name,
                         amount: res.data.data.amount,
                         expiredAt: res.data.data.expiredAt,
-                        savingAmount: 0, 
+                        savingAmount: 0,
+                        savings: [] 
                     }
                 ]) 
                 router.back();
             }
         })
         .catch((err) => {
-            console.log('err', err)
             alert(err.response.data.message);
         })
         .finally(() => setIsSubmitting(false))

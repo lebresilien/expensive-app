@@ -5,7 +5,10 @@ import { TabDisplayContext } from '@/hooks/useTabDisplay';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { router } from 'expo-router';
 import { useContext } from 'react';
-import { SafeAreaView, StatusBar, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet, ScrollView, Pressable, Alert } from 'react-native';
+
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import api from '@/app/lib/api';
 
 type ThemedTextProps = {
     lightColor?: string;
@@ -14,14 +17,52 @@ type ThemedTextProps = {
 
 export default function DetailScreen({ lightColor, darkColor}: ThemedTextProps) {
 
+    const { showActionSheetWithOptions } = useActionSheet();
     const { setDisplay } = useContext(TabDisplayContext);
-    const { current } = useContext(GoalContext);
+    const { current, setCurrent, goals, setGoals } = useContext(GoalContext);
     const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
 
     const load = () => {
         setDisplay('none');
         router.navigate('/modal-saving');
     }
+
+    const deleteItem = () => {
+        api.delete(`goals/${current?.id}`)
+        .then(() => {
+            const copyValue = [...goals];
+            // @ts-ignore
+            const data = copyValue.filter((item) => parseInt(item.id) !== parseInt(current.id.toString()));
+            setGoals(data);
+            setCurrent(null);
+            router.back();
+        })
+        .catch((err) => {
+            alert(err.response.data.message);
+        })
+    }
+
+    const showConfirmDialog = () => {
+        const options = ['Supprimer', 'Annuler'];
+        const destructiveButtonIndex = 0;
+        const cancelButtonIndex = 1;
+    
+        showActionSheetWithOptions({
+          options,
+          cancelButtonIndex,
+          destructiveButtonIndex
+        // @ts-ignore
+        }, (selectedIndex: number) => {
+          switch (selectedIndex) {
+            case destructiveButtonIndex:
+              // Delete
+              deleteItem();
+              break;
+    
+            case cancelButtonIndex:
+              // Canceled
+          }});
+      }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -34,11 +75,11 @@ export default function DetailScreen({ lightColor, darkColor}: ThemedTextProps) 
                     <ThemedText>{current?.name}</ThemedText>
                     <ThemedView style={styles.row}>
                         <ThemedText>Montant Actuel:</ThemedText>
-                        <ThemedText>{current?.savingAmount} fcfa</ThemedText>
+                        <ThemedText>{current?.savingAmount} FCFA</ThemedText>
                     </ThemedView>
                     <ThemedView style={styles.row}>
                         <ThemedText>Montant à atteindre:</ThemedText>
-                        <ThemedText>{current?.amount} fcfa</ThemedText>
+                        <ThemedText>{current?.amount} FCFA</ThemedText>
                     </ThemedView>
                     <ThemedView style={styles.row}>
                         <ThemedText>Date limite:</ThemedText>
@@ -57,7 +98,7 @@ export default function DetailScreen({ lightColor, darkColor}: ThemedTextProps) 
                         {current?.savings.map((item, index) => (
                           <ThemedView key={index} style={styles.row}>
                             <ThemedText>{item.day}</ThemedText>
-                            <ThemedText>{item.amount}</ThemedText>
+                            <ThemedText>{item.amount} FCFA</ThemedText>
                           </ThemedView>  
                         ))}
                         <Pressable onPress={load}>
@@ -78,7 +119,7 @@ export default function DetailScreen({ lightColor, darkColor}: ThemedTextProps) 
                     </ThemedView>
                 </ThemedView>
 
-                <Pressable style={[{ backgroundColor }, styles.list]}> 
+                <Pressable style={[{ backgroundColor }, styles.list]} onPress={showConfirmDialog}> 
                     <ThemedText type='delete'>Supprimer l'objectif</ThemedText> 
                 </Pressable>
 

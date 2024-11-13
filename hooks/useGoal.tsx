@@ -5,7 +5,7 @@ type ContextProps = {
     goals: Goal[];
     setGoals: (data: Goal[]) => void;
     current: Goal | null;
-    setCurrent: (data: Goal) => void;
+    setCurrent: (data: Goal | null) => void;
 }
 
 export const GoalContext =  createContext<ContextProps>({

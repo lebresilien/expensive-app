@@ -20,15 +20,7 @@ export default function DetailScreen({ lightColor, darkColor}: ThemedTextProps) 
 
     const load = () => {
         setDisplay('none');
-        // @ts-ignore
         router.navigate('/modal-saving');
-        // @ts-ignore
-        /* router.navigate({pathname: '/modal-saving',
-            params: {
-               id: id,
-               savingAmount: savingAmount
-            }
-        }) */
     }
 
     return (
@@ -61,9 +53,17 @@ export default function DetailScreen({ lightColor, darkColor}: ThemedTextProps) 
 
                 <ThemedView>
                     <ThemedText>Economies</ThemedText>
-                    <Pressable style={[{ backgroundColor }, styles.list]} onPress={load}>
-                        <ThemedText type='button'>Ajouter une économie</ThemedText> 
-                    </Pressable>
+                    <ThemedView style={[{ backgroundColor }, styles.list]}>
+                        {current?.savings.map((item, index) => (
+                          <ThemedView key={index} style={styles.row}>
+                            <ThemedText>{item.day}</ThemedText>
+                            <ThemedText>{item.amount}</ThemedText>
+                          </ThemedView>  
+                        ))}
+                        <Pressable onPress={load}>
+                            <ThemedText type='button'>Ajouter une économie</ThemedText> 
+                        </Pressable>
+                    </ThemedView>
                 </ThemedView>
 
                 <ThemedView>

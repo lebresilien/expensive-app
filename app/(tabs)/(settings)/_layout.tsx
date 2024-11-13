@@ -14,7 +14,7 @@ export default function StackLayout() {
                 headerShown: false
             }}>
                 <Stack.Screen name="index" />
-                <Stack.Screen name="[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom'}} getId={() => String(Date.now())} />
+                <Stack.Screen name="details" options={{ presentation: 'modal', animation: 'slide_from_bottom'}} getId={() => String(Date.now())} />
                 <Stack.Screen name="modal" options={{ presentation: 'modal', animation: 'slide_from_bottom'}} />
                 <Stack.Screen name="modal-saving" options={{ presentation: 'modal', animation: 'slide_from_bottom'}} />
             </Stack>

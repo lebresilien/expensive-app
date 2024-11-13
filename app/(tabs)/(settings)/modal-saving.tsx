@@ -32,9 +32,8 @@ export default function ModalSaving({ lightColor, darkColor }: ThemedTextProps) 
     const [show, setShow] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    //const { id, savingAmount }  = useLocalSearchParams();
     const { setDisplay } = useContext(TabDisplayContext);
-    const { goals, setGoals, current, setCurrent } = useContext(GoalContext);
+    const { current, setCurrent } = useContext(GoalContext);
     const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
 
     const {
@@ -65,7 +64,7 @@ export default function ModalSaving({ lightColor, darkColor }: ThemedTextProps) 
         .then((res) => {
             if(res.data.success) {
 
-                const copyValue = [...goals];
+                //const copyValue = [...goals];
 
                 if(current) {
 
@@ -76,8 +75,8 @@ export default function ModalSaving({ lightColor, darkColor }: ThemedTextProps) 
                     })
                     copyCurrent.savingAmount = parseInt(current.savingAmount.toString()) + parseInt(res.data.data.amount);
                     setCurrent(copyCurrent);
-                    
-                    let item = goals.find((item) => parseInt(item.id) === parseInt(current.id.toString()));
+                    router.back();
+                   /*  let item = goals.find((item) => parseInt(item.id) === parseInt(current.id.toString()));
                     
                     if(item) {
                         item.savingAmount = parseInt(current.savingAmount.toString()) + parseInt(res.data.data.amount);
@@ -88,10 +87,8 @@ export default function ModalSaving({ lightColor, darkColor }: ThemedTextProps) 
                         setGoals(copyValue);
                         console.log('udud', current)
                         router.back();
-                    }
+                    } */
                 }
-                
-                //router.back();
             }
         })
         .catch((err) => {
@@ -119,7 +116,7 @@ export default function ModalSaving({ lightColor, darkColor }: ThemedTextProps) 
 
             </ThemedView>
 
-            <ThemedText type='defaultSemiBold'>Ajouteor une économie</ThemedText>
+            <ThemedText type='defaultSemiBold'>Ajouter une économie</ThemedText>
 
             <ThemedView style={[{ backgroundColor }, styles.form]}>
                 <Controller

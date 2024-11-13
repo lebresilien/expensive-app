@@ -89,18 +89,7 @@ export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps)
 
     const handlePointerEnter = (goal: Goal) => {
         setCurrent(goal);
-        // @ts-ignore
-        router.navigate('/[id]');
-        // @ts-ignore
-        /* router.navigate({pathname: '/[id]',
-            params: {
-                id: id,
-                name: name,
-                amount: amount,
-                savingAmount: savingAmount,
-                expiredAt: expiredAt
-            }
-        }) */
+        router.navigate('/details');
     }
 
     return (

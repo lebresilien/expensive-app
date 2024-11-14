@@ -133,12 +133,12 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       paddingTop: StatusBar.currentHeight,
-      paddingHorizontal: 10,
       rowGap: 20
     },
     scroll: {
        flex: 1,
-       paddingVertical: 20
+       paddingVertical: 20,
+       paddingHorizontal: 10
     },
     list: {
         rowGap: 10,

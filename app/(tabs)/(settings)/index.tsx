@@ -101,25 +101,28 @@ export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps)
                 </ThemedView>
                 <ThemeIcon name='add' type='ionic' onPress={add} />
             </ThemedView>
-            <ThemedView>
-                <ThemedText type='title'>Objectifs Financiers</ThemedText>
-            </ThemedView>
+            
+            <ScrollView>
+                {loading ? 
 
-            {loading ? 
-                <Loading />
-                :
-                <ScrollView style={[{ backgroundColor }, styles.list]}>
-                    {goals.map((item, index) => (
-                        <ThemedView key={index} >
-                            <GoalItem
-                                goal={item}
-                                handlePointerEnter={handlePointerEnter}
-                            />
-                            { (index + 1) < goals.length && <ThemedView style={styles.line}></ThemedView>}
+                    <Loading />
+                    :
+                    <ThemedView style={styles.gap}>
+                        <ThemedText type='title'>Objectifs Financiers</ThemedText>
+                        <ThemedView style={[{ backgroundColor }, styles.list]}>
+                            {goals.map((item, index) => (
+                                <ThemedView key={index} >
+                                    <GoalItem
+                                        goal={item}
+                                        handlePointerEnter={handlePointerEnter}
+                                    />
+                                    { (index + 1) < goals.length && <ThemedView style={styles.line}></ThemedView>}
+                                </ThemedView>
+                            ))}
                         </ThemedView>
-                    ))}
-                </ScrollView>
-            }
+                    </ThemedView>
+                }
+            </ScrollView>
         </SafeAreaView>
     )
 }
@@ -168,5 +171,8 @@ const styles = StyleSheet.create({
     },
     white: {
         color: '#eee'
+    },
+    gap: {
+        rowGap: 10
     }
 });

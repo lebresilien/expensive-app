@@ -109,14 +109,14 @@ export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps)
                     :
                     <ThemedView style={styles.gap}>
                         <ThemedText type='title'>Objectifs Financiers</ThemedText>
-                        <ThemedView style={[{ backgroundColor }, styles.list]}>
+                        <ThemedView>
                             {goals.map((item, index) => (
-                                <ThemedView key={index} >
+                                <ThemedView key={index} style={[{ backgroundColor }, styles.list]}>
                                     <GoalItem
                                         goal={item}
                                         handlePointerEnter={handlePointerEnter}
                                     />
-                                    { (index + 1) < goals.length && <ThemedView style={styles.line}></ThemedView>}
+                                   {/*  { (index + 1) < goals.length && <ThemedView style={styles.line}></ThemedView>} */}
                                 </ThemedView>
                             ))}
                         </ThemedView>

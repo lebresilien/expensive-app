@@ -1,70 +1,197 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, SafeAreaView, StatusBar, ScrollView } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemeIcon } from '@/components/ThemeIcon';
+import { useState } from 'react';
 
-export default function HomeScreen() {
+type ThemedTextProps = {
+  lightColor?: string;
+  darkColor?: string;
+};
+
+export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
+
+  const [selected, setSelected] = useState<'incomes' | 'expenses'>('incomes');
+
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
+  const background = useThemeColor({ light: lightColor, dark: darkColor }, 'inactiveTint');
+  
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.container}>
+
+      <ScrollView style={styles.scroll}>
+      
+        <ThemedView style={styles.subContainer}>
+          
+          <ThemedView style={[{ backgroundColor }, styles.header]}>
+
+            <ThemedView style={styles.headerWrapper}>
+              
+              <ThemedText type='link' style={{fontWeight: 'bold'}}>Bienvenu</ThemedText>
+              
+              <ThemedView style={styles.icons}>
+                
+                <ThemedView style={[{ backgroundColor: background }, styles.iconWrapper]}>
+                  <ThemeIcon name='calendar' type='ionic' />
+                </ThemedView>
+
+                <ThemedView style={[{ backgroundColor: background }, styles.iconWrapper]}>
+                  <ThemeIcon name='add' type='ionic' />
+                </ThemedView>
+
+              </ThemedView>
+
+            </ThemedView>
+
+            <ThemedText type='link'>1 Nov - 31 Nov 2024</ThemedText>
+
+          </ThemedView>
+
+          <ThemedView style={[{ backgroundColor }, styles.card]}>
+
+            <ThemedText type='defaultSemiBold'>Solde</ThemedText>
+
+            <ThemedText type='defaultSemiBold' style={styles.bold}>26000 FCFA</ThemedText>
+
+              <ThemedView style={styles.content}>
+
+                <ThemedView style={{rowGap: 10}}>
+
+                  <ThemedView style={styles.wrap}>
+
+                    <ThemedView style={[styles.iconWrapper, { backgroundColor: '#22c55e' }]}>
+                      <ThemeIcon name='arrow-down' type='ionic' size={13} />
+                    </ThemedView>
+                    
+                    <ThemedText>revenus</ThemedText>
+
+                  </ThemedView>
+
+                  <ThemedText type='link'>5000 fcfa</ThemedText>
+
+                </ThemedView>
+
+                <ThemedView style={{rowGap: 10}}>
+
+                  <ThemedView style={styles.wrap}>
+
+                    <ThemedView style={[styles.iconWrapper, { backgroundColor: '#dc2626' }]}>
+                      <ThemeIcon name='arrow-up' type='ionic' size={13} />
+                    </ThemedView>
+                    
+                    <ThemedText>revenus</ThemedText>
+
+                  </ThemedView>
+
+                  <ThemedText type='link'>5000 fcfa</ThemedText>
+
+                </ThemedView>
+
+              </ThemedView>
+
+          </ThemedView>
+
+          <ThemedView style={[ { backgroundColor }, styles.swiper]}>
+                
+            <ThemedView
+              onTouchStart={() => setSelected('incomes')}
+              style={[styles.swiperItem, selected === 'incomes' && styles.selected]}
+            >
+              <ThemedText style={[selected === 'incomes' && {color: 'red'}]}>revenus</ThemedText>
+            </ThemedView>
+
+            <ThemedView 
+              onTouchStart={() => setSelected('expenses')}
+              style={[styles.swiperItem, selected === 'expenses' && styles.selected]}
+            >
+              <ThemedText style={[selected === 'expenses' && {color: 'red'}]}>depenses</ThemedText>
+            </ThemedView>
+
+          </ThemedView>
+
+        </ThemedView>
+
+      </ScrollView>
+
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    paddingTop: StatusBar.currentHeight
+  },
+  scroll: {
+    flex: 1
+  },
+  header: {
+    paddingHorizontal: 5,
+    paddingVertical: 15,
+    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 5,
+  },
+  headerWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  icons: {
+    display: 'flex',
+    flexDirection: 'row',
+    columnGap: 10
+  },
+  iconWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    padding: 5
+  },
+  card: {
+    borderRadius: 10,
+    rowGap: 10,
+    marginHorizontal: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 20
+  },
+  content:{
+    display: 'flex',
+    flexDirection: 'row',
+    columnGap: 50
+  },
+  wrap: {
+    display: 'flex',
+    flexDirection: 'row',
+    columnGap: 5
+  },
+  subContainer: {
+    flex: 1,
+    rowGap: 50
+  },
+  swiper: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    columnGap: 5,
+    padding: 10,
+    justifyContent: 'space-around'
+  },
+  swiperItem: {
+    flex: 0.45,
+    alignItems: 'center',
+    paddingBottom: 5
+  },
+  selected: {
+    borderBottomWidth: 2,
+    borderBottomColor: 'red',
   },
   stepContainer: {
     gap: 8,
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  bold: {
+    fontWeight: 'bold'
   },
 });

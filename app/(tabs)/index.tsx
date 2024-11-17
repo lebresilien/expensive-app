@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform, SafeAreaView, StatusBar, ScrollView, Button } from 'react-native';
+import { StyleSheet, SafeAreaView, StatusBar, ScrollView } from 'react-native';
 
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemeIcon } from '@/components/ThemeIcon';
 import { useEffect, useState } from 'react';
 import api from '../lib/api';
+import { Loading } from '@/components/Loading';
 
 type ThemedTextProps = {
   lightColor?: string;
@@ -52,6 +53,7 @@ const ItemList = ({
 
 export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
+  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<'incomes' | 'expenses'>('incomes');
   const [expenses, setExpenses] = useState<Transaction[] | []>([]);
   const [incomes, setIncomes] = useState<Transaction[] | []>([]);
@@ -65,13 +67,15 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
   useEffect(() => {
     api.get('transactions')
     .then((res) => {
-      console.log(res.data.data)
       if(res.data.success) {
         setIncomes(res.data.data.incomes);
         setExpenses(res.data.data.expenses);
         setTotalExpenses(parseFloat(res.data.data.totalExpenses));
         setTotalIncomes(parseFloat(res.data.data.totalIncomes));
       }
+    })
+    .finally(() => {
+      setLoading(false);
     })
   }, []);
 
@@ -106,100 +110,110 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
           </ThemedView>
 
-          <ThemedView style={[{ backgroundColor }, styles.card]}>
+          {loading ? 
+          
+            <Loading />:
+        
+            <ThemedView style={{rowGap: 20}}>
 
-            <ThemedText type='defaultSemiBold'>Solde</ThemedText>
+              <ThemedView style={[{ backgroundColor }, styles.card]}>
 
-            <ThemedText type='defaultSemiBold' style={styles.bold}>{ totalIcomes - totalExpenses } FCFA</ThemedText>
+                <ThemedText type='defaultSemiBold'>Solde</ThemedText>
 
-              <ThemedView style={styles.content}>
+                <ThemedText type='defaultSemiBold' style={styles.bold}>{ totalIcomes - totalExpenses } FCFA</ThemedText>
 
-                <ThemedView style={{rowGap: 10}}>
+                  <ThemedView style={styles.content}>
 
-                  <ThemedView style={styles.wrap}>
+                    <ThemedView style={{rowGap: 10}}>
 
-                    <ThemedView style={[styles.iconWrapper, { backgroundColor: '#22c55e' }]}>
-                      <ThemeIcon name='arrow-down' type='ionic' size={13} />
+                      <ThemedView style={styles.wrap}>
+
+                        <ThemedView style={[styles.iconWrapper, { backgroundColor: '#22c55e' }]}>
+                          <ThemeIcon name='arrow-down' type='ionic' size={13} />
+                        </ThemedView>
+                        
+                        <ThemedText>revenus</ThemedText>
+
+                      </ThemedView>
+
+                      <ThemedText type='link'>{ totalIcomes } FCFA</ThemedText>
+
                     </ThemedView>
-                    
-                    <ThemedText>revenus</ThemedText>
+
+                    <ThemedView style={{rowGap: 10}}>
+
+                      <ThemedView style={styles.wrap}>
+
+                        <ThemedView style={[styles.iconWrapper, { backgroundColor: '#dc2626' }]}>
+                          <ThemeIcon name='arrow-up' type='ionic' size={13} />
+                        </ThemedView>
+                        
+                        <ThemedText>revenus</ThemedText>
+
+                      </ThemedView>
+
+                      <ThemedText type='link'>{ totalExpenses } FCFA</ThemedText>
+
+                    </ThemedView>
 
                   </ThemedView>
 
-                  <ThemedText type='link'>{ totalIcomes } FCFA</ThemedText>
+              </ThemedView>
 
+              <ThemedView style={[ { backgroundColor }, styles.swiper]}>
+                    
+                <ThemedView
+                  onTouchStart={() => setSelected('incomes')}
+                  style={[styles.swiperItem, selected === 'incomes' && ([styles.selected, { borderBottomColor: background }])]}
+                >
+                  <ThemedText style={[selected === 'incomes' && { color: background, fontWeight: 'bold' }]}>revenus</ThemedText>
                 </ThemedView>
 
-                <ThemedView style={{rowGap: 10}}>
-
-                  <ThemedView style={styles.wrap}>
-
-                    <ThemedView style={[styles.iconWrapper, { backgroundColor: '#dc2626' }]}>
-                      <ThemeIcon name='arrow-up' type='ionic' size={13} />
-                    </ThemedView>
-                    
-                    <ThemedText>revenus</ThemedText>
-
-                  </ThemedView>
-
-                  <ThemedText type='link'>{ totalExpenses } FCFA</ThemedText>
-
+                <ThemedView 
+                  onTouchStart={() => setSelected('expenses')}
+                  style={[styles.swiperItem, selected === 'expenses' && ([styles.selected, { borderBottomColor: background }])]}
+                >
+                  <ThemedText style={[selected === 'expenses' && { color: background, fontWeight: 'bold' }]}>depenses</ThemedText>
                 </ThemedView>
 
               </ThemedView>
 
-          </ThemedView>
+              <ThemedView style={{marginHorizontal: 10, rowGap: 10}}>
+                {selected === "expenses" ? 
+                  <>
+                    {expenses.map((item, index) => (
+                      <ItemList
+                        key={index}
+                        name={item.name}
+                        amount={item.amount}
+                        date={item.date}
+                        background={background}
+                        backgroundColor={backgroundColor}
+                        isExpens={true}
+                        color={color}
+                      />
+                    ))}
+                  </>:
+                  <>
+                    {incomes.map((item, index) => (
+                      <ItemList
+                        key={index}
+                        name={item.name}
+                        amount={item.amount}
+                        date={item.date}
+                        background={background}
+                        backgroundColor={backgroundColor}
+                        isExpens={false}
+                        color={color}
+                      />
+                    ))}
+                  </>
+                }
+              </ThemedView>
 
-          <ThemedView style={[ { backgroundColor }, styles.swiper]}>
-                
-            <ThemedView
-              onTouchStart={() => setSelected('incomes')}
-              style={[styles.swiperItem, selected === 'incomes' && ([styles.selected, { borderBottomColor: background }])]}
-            >
-              <ThemedText style={[selected === 'incomes' && { color: background, fontWeight: 'bold' }]}>revenus</ThemedText>
             </ThemedView>
 
-            <ThemedView 
-              onTouchStart={() => setSelected('expenses')}
-              style={[styles.swiperItem, selected === 'expenses' && ([styles.selected, { borderBottomColor: background }])]}
-            >
-              <ThemedText style={[selected === 'expenses' && { color: background, fontWeight: 'bold' }]}>depenses</ThemedText>
-            </ThemedView>
-
-          </ThemedView>
-
-          <ThemedView style={{marginHorizontal: 10, rowGap: 10}}>
-            {selected === "expenses" ? 
-              <>
-                {expenses.map((item, index) => (
-                  <ItemList
-                    key={index}
-                    name={item.name}
-                    amount={item.amount}
-                    date={item.date}
-                    background={background}
-                    backgroundColor={backgroundColor}
-                    isExpens={true}
-                    color={color}
-                  />
-                ))}
-              </>:
-              <>
-                {incomes.map((item, index) => (
-                  <ItemList
-                    key={index}
-                    name={item.name}
-                    amount={item.amount}
-                    date={item.date}
-                    background={background}
-                    backgroundColor={backgroundColor}
-                    isExpens={false}
-                    color={color}
-                  />
-                ))}
-              </>
-            }
-          </ThemedView>
+          }
 
         </ThemedView>
 

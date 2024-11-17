@@ -4,7 +4,7 @@ import LoginScreen from "@/app/login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import OnBoarding from "./page-viewer";
 import { Loading } from "@/components/Loading";
-import HomeScreen from "./(tabs)";
+import HomeScreen from "./(tabs)/home";
 import TabLayout from "./(tabs)/_layout";
 import { router } from "expo-router";
 

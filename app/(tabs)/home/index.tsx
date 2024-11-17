@@ -5,7 +5,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemeIcon } from '@/components/ThemeIcon';
 import { useEffect, useState } from 'react';
-import api from '../lib/api';
+import api from '../../lib/api';
 import { Loading } from '@/components/Loading';
 
 type ThemedTextProps = {

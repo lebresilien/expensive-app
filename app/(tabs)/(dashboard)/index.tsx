@@ -99,8 +99,11 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
                   <ThemeIcon name='calendar' type='ionic' />
                 </ThemedView>
 
-                <ThemedView style={[{ backgroundColor: background }, styles.iconWrapper]}>
-                  <ThemeIcon name='add' type='ionic' onPress={() => router.push('/transaction')} />
+                <ThemedView 
+                  style={[{ backgroundColor: background }, styles.iconWrapper]}
+                  onTouchStart={() => router.push('/transaction')}
+                >
+                  <ThemeIcon name='add' type='ionic' />
                 </ThemedView>
 
               </ThemedView>

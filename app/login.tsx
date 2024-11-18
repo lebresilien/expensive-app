@@ -44,7 +44,6 @@ export default function LoginScreen() {
         password: data.password
       })
       .then(async (res) => {
-        //console.log('uuuuuuuuuuuuuuuuuu', res.data.data.token);
         const data = res.data.data;
         if(res.data.success) {
           await AsyncStorage.setItem("@token", data.token);

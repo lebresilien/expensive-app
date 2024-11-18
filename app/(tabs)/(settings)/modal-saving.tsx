@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, StatusBar, Pressable } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import api from '@/app/lib/api';
 import { Loading } from '@/components/Loading';

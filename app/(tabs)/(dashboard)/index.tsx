@@ -7,6 +7,7 @@ import { ThemeIcon } from '@/components/ThemeIcon';
 import { useEffect, useState } from 'react';
 import api from '../../lib/api';
 import { Loading } from '@/components/Loading';
+import { router } from 'expo-router';
 
 type ThemedTextProps = {
   lightColor?: string;
@@ -66,7 +67,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
   useEffect(() => {
     api.get('transactions')
-    .then((res) => {
+    .then((res: any) => {
       if(res.data.success) {
         setIncomes(res.data.data.incomes);
         setExpenses(res.data.data.expenses);
@@ -99,7 +100,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
                 </ThemedView>
 
                 <ThemedView style={[{ backgroundColor: background }, styles.iconWrapper]}>
-                  <ThemeIcon name='add' type='ionic' />
+                  <ThemeIcon name='add' type='ionic' onPress={() => router.push('/transaction')} />
                 </ThemedView>
 
               </ThemedView>

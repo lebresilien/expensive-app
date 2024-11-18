@@ -25,11 +25,17 @@ export default function TabLayout() {
           tabBarStyle: {
             backgroundColor: Colors[colorScheme ?? 'light'].tint,
             display: display
-          }
+          },
           
         }}>
         <Tabs.Screen
-          name="(home)"
+          name="index"
+          options={{
+            tabBarItemStyle: { display: "none" },
+          }}
+        />
+        <Tabs.Screen
+          name="(dashboard)"
           options={{
             title: 'Home',
             tabBarIcon: ({ color, focused }) => (

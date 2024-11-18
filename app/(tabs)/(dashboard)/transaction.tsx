@@ -275,7 +275,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 2,
     justifyContent: 'space-between',
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 13,
     borderRadius: 10
   },
   empty: {
@@ -285,8 +286,7 @@ const styles = StyleSheet.create({
   },
   radioButtonContainer: { 
     flexDirection: 'row', 
-    alignItems: 'center', 
-    marginBottom: 10 
+    alignItems: 'center' 
   },
   radioButton: { 
     height: 20, 

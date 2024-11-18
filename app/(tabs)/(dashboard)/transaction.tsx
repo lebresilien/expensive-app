@@ -24,11 +24,22 @@ interface FormValues {
   date: string
 }
 
-const RadioButton = ({ label, isSelected, onPress, color }: {label: string, isSelected: boolean, onPress: () => void, color: string}) => (
-  <TouchableOpacity onPress={onPress} style={styles.radioButtonContainer}>
-    <View style={[styles.radioButton, isSelected && { backgroundColor: color }, { borderColor: color }]} />
-    <Text style={styles.radioButtonLabel}>{label}</Text>
-  </TouchableOpacity>
+const RadioButton = ({ 
+    label, 
+    isSelected, 
+    onPress, 
+    color 
+  }: 
+  {
+    label: string, 
+    isSelected: boolean, 
+    onPress: () => void, 
+    color: string
+  }) => (
+    <TouchableOpacity onPress={onPress} style={styles.radioButtonContainer}>
+      <View style={[styles.radioButton, isSelected && { backgroundColor: color }, { borderColor: color }]} />
+      <Text style={styles.radioButtonLabel}>{label}</Text>
+    </TouchableOpacity>
 );
 export default function Transaction({ lightColor, darkColor }: ThemedTextProps) {
   

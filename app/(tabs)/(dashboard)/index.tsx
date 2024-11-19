@@ -1,4 +1,4 @@
-import { StyleSheet, SafeAreaView, StatusBar, ScrollView } from 'react-native';
+import { StyleSheet, SafeAreaView, StatusBar, ScrollView, Modal } from 'react-native';
 
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -9,6 +9,7 @@ import api from '../../lib/api';
 import { Loading } from '@/components/Loading';
 import { router } from 'expo-router';
 import { ExpenseContext } from '@/hooks/useExpense';
+import { TabDisplayContext } from '@/hooks/useTabDisplay';
 
 type ThemedTextProps = {
   lightColor?: string;
@@ -56,8 +57,10 @@ const ItemList = ({
 
 export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
+  const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<'incomes' | 'expenses'>('incomes');
+  const [month, setMonth] = useState('');
  
   const { 
     expenses, 
@@ -69,18 +72,20 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
     totalExpenses, 
     setTotalExpenses 
   } = useContext(ExpenseContext);
+  const { setDisplay } = useContext(TabDisplayContext);
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
   const background = useThemeColor({ light: lightColor, dark: darkColor }, 'inactiveTint');
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'icon');
 
   useEffect(() => {
     api.get('transactions')
-    .then((res: any) => {
+    .then((res) => {
       if(res.data.success) {
         setIncomes(res.data.data.incomes);
         setExpenses(res.data.data.expenses);
         setTotalExpenses(parseFloat(res.data.data.totalExpenses));
         setTotalIncomes(parseFloat(res.data.data.totalIncomes));
+        setMonth(res.data.data.month);
       }
     })
     .finally(() => {
@@ -89,7 +94,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, modalVisible && styles.shadow]}>
 
       <ScrollView style={styles.scroll}>
       
@@ -103,13 +108,19 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
               
               <ThemedView style={styles.icons}>
                 
-                <ThemedView style={[{ backgroundColor: background }, styles.iconWrapper]}>
+                <ThemedView 
+                  style={[{ backgroundColor: background }, styles.iconWrapper]}
+                  onTouchStart={() => setModalVisible(true)}
+                >
                   <ThemeIcon name='calendar' type='ionic' />
                 </ThemedView>
 
                 <ThemedView 
                   style={[{ backgroundColor: background }, styles.iconWrapper]}
-                  onTouchStart={() => router.push('/transaction')}
+                  onTouchStart={() => {
+                    setDisplay('none');
+                    router.push('/transaction');
+                  }}
                 >
                   <ThemeIcon name='add' type='ionic' />
                 </ThemedView>
@@ -118,7 +129,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
             </ThemedView>
 
-            <ThemedText type='link'>1 Nov - 31 Nov 2024</ThemedText>
+            <ThemedText type='link'>{ month }</ThemedText>
 
           </ThemedView>
 
@@ -227,6 +238,18 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
           }
 
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+          >
+            <ThemedView style={styles.centeredView}>
+              <ThemedView style={styles.modalView}>
+                <ThemedText onPress={() => setModalVisible(false)}>Hello World!</ThemedText>
+              </ThemedView>
+            </ThemedView>
+          </Modal>
+
         </ThemedView>
 
       </ScrollView>
@@ -333,5 +356,28 @@ const styles = StyleSheet.create({
     columnGap: 15,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 10,
+  },
+  shadow: {
+    opacity: 0.5
   }
 });

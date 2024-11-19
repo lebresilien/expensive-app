@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, SafeAreaView, StyleSheet, StatusBar } from "react-native";
+import { SafeAreaView, StyleSheet, StatusBar } from "react-native";
 import LoginScreen from "@/app/login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import OnBoarding from "./page-viewer";
 import { Loading } from "@/components/Loading";
-import TabLayout from "./(tabs)/_layout";
 import { router } from "expo-router";
 
 export default function Presentation() {

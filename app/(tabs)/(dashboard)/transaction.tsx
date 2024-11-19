@@ -13,6 +13,7 @@ import { Controller, useForm } from 'react-hook-form';
 import Input from '@/components/Input';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { ExpenseContext } from '@/hooks/useExpense';
+import { TabDisplayContext } from '@/hooks/useTabDisplay';
 
 type ThemedTextProps = {
   lightColor?: string;
@@ -61,6 +62,7 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
   const background = useThemeColor({ light: lightColor, dark: darkColor }, 'inactiveTint');
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'icon');
+  const { setDisplay } = useContext(TabDisplayContext);
   const { 
     expenses, 
     setExpenses, 
@@ -150,7 +152,12 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
 
         <ThemedView style={styles.header}>
 
-            <ThemedView style={styles.nav} onTouchStart={() => router.back()}>
+            <ThemedView style={styles.nav} 
+              onTouchStart={() => { 
+                setDisplay('flex');
+                router.back();
+              }}
+            >
               <ThemeIcon type='ionic' name='chevron-back' size={20} />
               <ThemedText type='button'>Annuler</ThemedText>
             </ThemedView>

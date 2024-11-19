@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, Text, View, Alert, StatusBar } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, View, Alert, StatusBar, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { UserContext } from '@/hooks/userContext';
@@ -11,6 +11,8 @@ import { ThemeIcon } from '@/components/ThemeIcon';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Controller, useForm } from 'react-hook-form';
 import Input from '@/components/Input';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { ExpenseContext } from '@/hooks/useExpense';
 
 type ThemedTextProps = {
   lightColor?: string;
@@ -20,8 +22,7 @@ type ThemedTextProps = {
 interface FormValues {
   name: string
   amount: string,
-  description: string,
-  date: string
+  description: string
 }
 
 const RadioButton = ({ 
@@ -41,15 +42,35 @@ const RadioButton = ({
       <Text style={styles.radioButtonLabel}>{label}</Text>
     </TouchableOpacity>
 );
+
+const months = ["Jan", "Fev", "Mar", "Avr", "Mai", "Juin", "Juil", "Aug", "Sept", "Oct", "Nov", "Dec"];
 export default function Transaction({ lightColor, darkColor }: ThemedTextProps) {
   
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(false);
   const [selectedIncome, setSelectedIncome] = useState(true);
+  const [trx, setTrx] = useState({
+    name: '',
+    amount: '',
+    description: '',
+    date: ''
+  })
 
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
   const background = useThemeColor({ light: lightColor, dark: darkColor }, 'inactiveTint');
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'icon');
+  const { 
+    expenses, 
+    setExpenses, 
+    incomes, 
+    setIncomes, 
+    totalIncomes, 
+    setTotalIncomes, 
+    totalExpenses, 
+    setTotalExpenses 
+  } = useContext(ExpenseContext);
 
   const {
     control,
@@ -67,6 +88,63 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
     }
   }
 
+  const onChange = (event:DateTimePickerEvent, selectedDate: Date | undefined) => {
+    setShow(false);
+    selectedDate && setDate(selectedDate);
+  };
+
+  const handle = (value: string, name: string) => {
+    setTrx({
+      ...trx,
+      [name]: value,
+    });
+  }
+
+  const onSubmit = (data: FormValues) => {
+    setIsSubmitting(true);
+    api.post('transactions', {
+        name: (data.name).toLowerCase(),
+        amount: data.amount,
+        description: data.description,
+        type_id: selectedExpense ? 2 : 1,
+        date: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+    })
+    .then((res) => {
+      if (res.data.success) {
+          if (selectedExpense) {
+            setExpenses([
+              ...expenses,
+              {
+                id: res.data.data.id,
+                name: res.data.data.name,
+                amount: res.data.data.amount,
+                date: res.data.data.date,
+                description: res.data.data.description
+              }
+            ]);
+            setTotalExpenses(totalExpenses + parseFloat(res.data.data.amount));
+          } else {
+            setIncomes([
+              ...incomes,
+              {
+                id: res.data.data.id,
+                name: res.data.data.name,
+                amount: res.data.data.amount,
+                date: res.data.data.date,
+                description: res.data.data.description
+              }
+            ]);
+            setTotalIncomes(totalIncomes + parseFloat(res.data.data.amount));
+          }
+        router.back();
+      }
+    })
+    .catch((err) => {
+      alert(err.response.data.message);
+    })
+    .finally(() => setIsSubmitting(false))
+  }
+
   return (
     <ThemedView style={styles.container}>
 
@@ -81,7 +159,9 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
             {isSubmitting ? 
                 <Loading /> :
                 <ThemedButton 
-                    title='Enregistrer' 
+                  title='Enregistrer'
+                  isValid={isValid} 
+                  onPress={handleSubmit(onSubmit)} 
                 />
             }
         </ThemedView>
@@ -98,15 +178,15 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
                 <ThemedText style={[{textTransform: 'uppercase'}, { color }]}>T</ThemedText>
               </ThemedView>
 
-              <ThemedView /* style={styles.itemPreview} */>
-                <ThemedText type='defaultSemiBold'>Title</ThemedText>
-                <ThemedText type='link' style={{ fontWeight: 100 }}>14,Nov 2024</ThemedText>
+              <ThemedView>
+                <ThemedText type='defaultSemiBold' style={styles.breakWord}>{trx.name ? trx.name : 'Title'}</ThemedText>
+                <ThemedText type='link' style={{ fontWeight: 100 }}>{date && date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear()}</ThemedText>
               </ThemedView>
 
             </ThemedView>
 
             <ThemedView>
-              <ThemedText type='link' style={{ color: 'red' }}>0.0 FCFA</ThemedText>
+              <ThemedText type='link' style={{ color: 'red' }}>{trx.amount ? trx.amount : '0.0'} FCFA</ThemedText>
             </ThemedView>
 
           </ThemedView>
@@ -123,7 +203,10 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
                   <Input
                     value={value}
                     placeholder="Ex: Achat ...."
-                    onChangeText={onChange}
+                    onChangeText={(e) => {
+                      onChange(e);
+                      handle(e, 'name');
+                    }}
                     style={styles.input}
                   />
                 </ThemedView>
@@ -143,8 +226,11 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
                 <ThemedView style={[styles.inputContainer, { backgroundColor }]}>
                   <Input
                     value={value}
-                    placeholder="Produit local"
-                    onChangeText={onChange}
+                    placeholder="Ex: Produit local"
+                    onChangeText={(e) => {
+                      onChange(e);
+                      handle(e, 'description')
+                    }}
                     style={styles.input}
                   />
                 </ThemedView>
@@ -169,7 +255,10 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
                     <Input
                       value={value}
                       placeholder="0"
-                      onChangeText={onChange}
+                      onChangeText={(e) => {
+                        onChange(e);
+                        handle(e, 'amount')
+                      }}
                       style={styles.input}
                       keyboardType='numeric'
                       type='icon'
@@ -197,7 +286,23 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
 
           </ThemedView>
 
+          <ThemedView style={styles.rowPreview}>
+            <ThemedText type="link" style={{fontWeight: 'bold'}}>Date</ThemedText>
+            <Pressable style={[styles.pressable, { backgroundColor }]} onPress={() => setShow(true)}>
+              <ThemedText>{date && date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear()}</ThemedText>
+            </Pressable>
+          </ThemedView>
+
         </ThemedView>
+
+        {show && (
+          <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={'date'}
+              onChange={onChange}
+          />
+        )}
 
     </ThemedView>
   );
@@ -298,4 +403,14 @@ const styles = StyleSheet.create({
   radioButtonLabel: { 
     fontSize: 16 
   },
+  pressable: {
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    paddingVertical: 2,
+    paddingHorizontal: 5
+  },
+  breakWord: {
+    maxWidth: 200
+  }
 });

@@ -4,10 +4,11 @@ import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemeIcon } from '@/components/ThemeIcon';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import api from '../../lib/api';
 import { Loading } from '@/components/Loading';
 import { router } from 'expo-router';
+import { ExpenseContext } from '@/hooks/useExpense';
 
 type ThemedTextProps = {
   lightColor?: string;
@@ -18,7 +19,8 @@ export type Transaction = {
   id: string;
   name: string;
   amount: number,
-  date: string
+  date: string,
+  description?: string
 };
 
 const ItemList = ({
@@ -56,11 +58,17 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<'incomes' | 'expenses'>('incomes');
-  const [expenses, setExpenses] = useState<Transaction[] | []>([]);
-  const [incomes, setIncomes] = useState<Transaction[] | []>([]);
-  const [totalIcomes, setTotalIncomes] = useState(0);
-  const [totalExpenses, setTotalExpenses] = useState(0);
-
+ 
+  const { 
+    expenses, 
+    setExpenses, 
+    incomes, 
+    setIncomes, 
+    totalIncomes, 
+    setTotalIncomes, 
+    totalExpenses, 
+    setTotalExpenses 
+  } = useContext(ExpenseContext);
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
   const background = useThemeColor({ light: lightColor, dark: darkColor }, 'inactiveTint');
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'icon');
@@ -124,7 +132,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
                 <ThemedText type='defaultSemiBold'>Solde</ThemedText>
 
-                <ThemedText type='defaultSemiBold' style={styles.bold}>{ totalIcomes - totalExpenses } FCFA</ThemedText>
+                <ThemedText type='defaultSemiBold' style={styles.bold}>{ totalIncomes - totalExpenses } FCFA</ThemedText>
 
                   <ThemedView style={styles.content}>
 
@@ -140,7 +148,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
                       </ThemedView>
 
-                      <ThemedText type='link'>{ totalIcomes } FCFA</ThemedText>
+                      <ThemedText type='link'>{ totalIncomes } FCFA</ThemedText>
 
                     </ThemedView>
 

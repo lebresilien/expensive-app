@@ -10,6 +10,7 @@ import { Loading } from '@/components/Loading';
 import { router } from 'expo-router';
 import { ExpenseContext } from '@/hooks/useExpense';
 import { TabDisplayContext } from '@/hooks/useTabDisplay';
+import { BlurView } from 'expo-blur';
 
 type ThemedTextProps = {
   lightColor?: string;
@@ -94,9 +95,9 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
   }, []);
 
   return (
-    <SafeAreaView style={[styles.container, modalVisible && styles.shadow]}>
+    <SafeAreaView style={[styles.container]}>
 
-      <ScrollView style={styles.scroll}>
+      <ScrollView style={[styles.scroll]}>
       
         <ThemedView style={styles.subContainer}>
           
@@ -244,8 +245,19 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
             visible={modalVisible}
           >
             <ThemedView style={styles.centeredView}>
-              <ThemedView style={styles.modalView}>
-                <ThemedText onPress={() => setModalVisible(false)}>Hello World!</ThemedText>
+              <ThemedView style={[styles.modalView, { backgroundColor }]}>
+                <ThemedView style={styles.row}>
+                  <ThemedText type="link">Date debut</ThemedText>
+                  <ThemedView style={[{backgroundColor}]}>
+                    <ThemedText type="link">1 Nov 2024</ThemedText>
+                  </ThemedView>
+                </ThemedView>
+                <ThemedView style={styles.row}>
+                  <ThemedText type="link">Date fin</ThemedText>
+                  <ThemedView style={[{backgroundColor}]}>
+                    <ThemedText type="link">30 Nov 2024</ThemedText>
+                  </ThemedView>
+                </ThemedView>
               </ThemedView>
             </ThemedView>
           </Modal>
@@ -253,7 +265,14 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
         </ThemedView>
 
       </ScrollView>
-
+      {modalVisible && ((
+        <BlurView 
+          style={{ flex: 1 }} 
+          tint="systemThickMaterialDark" 
+          intensity={100}
+        />
+      ))}
+      
     </SafeAreaView>
   );
 }
@@ -261,10 +280,11 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight
   },
   scroll: {
-    flex: 1
+    flex: 1,
+    paddingTop: StatusBar.currentHeight,
+    ...StyleSheet.absoluteFill,
   },
   header: {
     paddingHorizontal: 5,
@@ -363,11 +383,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalView: {
-    margin: 20,
-    backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
+    padding: 18,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -376,8 +393,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 10,
+    rowGap: 10
   },
   shadow: {
-    opacity: 0.5
+    opacity: 1,
+  },
+  absolute: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0
+  },
+  blurContainer: {
+    flex: 1,
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 10,
+  },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'red',
   }
 });

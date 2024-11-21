@@ -133,7 +133,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
             </ThemedView>
 
-            <ThemedText type='link'>{`${startMonth.split(' ')[0]} ${startMonth.split(' ')[1]} - ${endMonth}`}</ThemedText>
+            <ThemedText type='link'>{startMonth ? `${startMonth.split(' ')[0]} ${startMonth.split(' ')[1]} - ${endMonth}` : ''}</ThemedText>
 
           </ThemedView>
 
@@ -254,14 +254,14 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
                 <ThemedView style={styles.row}>
                   <ThemedText type="link">Date debut</ThemedText>
                   <ThemedView style={[styles.border, { backgroundColor: background }]}>
-                    <ThemedText type="link">1 Nov 2024</ThemedText>
+                    <ThemedText type="link">{startMonth ? `${startMonth.split(' ')[0]} ${startMonth.split(' ')[1]}` : ''}</ThemedText>
                   </ThemedView>
                 </ThemedView>
 
                 <ThemedView style={styles.row}>
                   <ThemedText type="link">Date fin</ThemedText>
                   <ThemedView style={[styles.border, { backgroundColor: background }]}>
-                    <ThemedText type="link">30 Nov 2024</ThemedText>
+                    <ThemedText type="link">{endMonth}</ThemedText>
                   </ThemedView>
                 </ThemedView>
 

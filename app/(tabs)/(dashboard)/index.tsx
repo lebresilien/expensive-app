@@ -1,4 +1,4 @@
-import { StyleSheet, SafeAreaView, StatusBar, ScrollView, Modal } from 'react-native';
+import { StyleSheet, SafeAreaView, StatusBar, ScrollView, Modal, Pressable } from 'react-native';
 
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -11,6 +11,7 @@ import { router } from 'expo-router';
 import { ExpenseContext } from '@/hooks/useExpense';
 import { TabDisplayContext } from '@/hooks/useTabDisplay';
 import { BlurView } from 'expo-blur';
+import ThemedButton from '@/components/ThemedButton';
 
 type ThemedTextProps = {
   lightColor?: string;
@@ -61,7 +62,8 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<'incomes' | 'expenses'>('incomes');
-  const [month, setMonth] = useState('');
+  const [startMonth, setStartMonth] = useState('');
+  const [endMonth, setEndMonth] = useState('');
  
   const { 
     expenses, 
@@ -86,7 +88,8 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
         setExpenses(res.data.data.expenses);
         setTotalExpenses(parseFloat(res.data.data.totalExpenses));
         setTotalIncomes(parseFloat(res.data.data.totalIncomes));
-        setMonth(res.data.data.month);
+        setStartMonth(res.data.data.startMonth);
+        setEndMonth(res.data.data.endMonth);
       }
     })
     .finally(() => {
@@ -130,7 +133,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
             </ThemedView>
 
-            <ThemedText type='link'>{ month }</ThemedText>
+            <ThemedText type='link'>{`${startMonth.split(' ')[0]} ${startMonth.split(' ')[1]} - ${endMonth}`}</ThemedText>
 
           </ThemedView>
 
@@ -245,20 +248,34 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
             visible={modalVisible}
           >
             <ThemedView style={styles.centeredView}>
+              
               <ThemedView style={[styles.modalView, { backgroundColor }]}>
+                
                 <ThemedView style={styles.row}>
                   <ThemedText type="link">Date debut</ThemedText>
-                  <ThemedView style={[{backgroundColor}]}>
+                  <ThemedView style={[styles.border, { backgroundColor: background }]}>
                     <ThemedText type="link">1 Nov 2024</ThemedText>
                   </ThemedView>
                 </ThemedView>
+
                 <ThemedView style={styles.row}>
                   <ThemedText type="link">Date fin</ThemedText>
-                  <ThemedView style={[{backgroundColor}]}>
+                  <ThemedView style={[styles.border, { backgroundColor: background }]}>
                     <ThemedText type="link">30 Nov 2024</ThemedText>
                   </ThemedView>
                 </ThemedView>
+
+                <ThemedView style={[styles.row, { justifyContent: 'center', columnGap: 10, marginTop: 10 }]}>
+                  <Pressable style={styles.pressable} onPress={() => setModalVisible(false) }>
+                    <ThemedText type='link' style={styles.white}>Annuler</ThemedText>
+                  </Pressable>
+                  <Pressable style={[styles.pressable, { backgroundColor: 'green'}]}>
+                    <ThemedText type='link' style={styles.white}>Filtrer</ThemedText>
+                  </Pressable>
+                </ThemedView>
+
               </ThemedView>
+
             </ThemedView>
           </Modal>
 
@@ -415,6 +432,19 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: 'red',
+    columnGap: 30,
+    alignItems: 'center'
+  },
+  border:{
+    padding: 5,
+    borderRadius: 10
+  },
+  white: {
+    color:     '#eee'
+  },
+  pressable: {
+    backgroundColor: 'red', 
+    padding: 7, 
+    borderRadius: 10
   }
 });

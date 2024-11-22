@@ -62,8 +62,6 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<'incomes' | 'expenses'>('incomes');
-  const [startMonth, setStartMonth] = useState('');
-  const [endMonth, setEndMonth] = useState('');
  
   const { 
     expenses, 
@@ -73,7 +71,13 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
     totalIncomes, 
     setTotalIncomes, 
     totalExpenses, 
-    setTotalExpenses 
+    setTotalExpenses, 
+    setMonths,
+    startMonth, 
+    setStartMonth,
+    endMonth, 
+    setEndMonth
+
   } = useContext(ExpenseContext);
   const { setDisplay } = useContext(TabDisplayContext);
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
@@ -90,6 +94,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
         setTotalIncomes(parseFloat(res.data.data.totalIncomes));
         setStartMonth(res.data.data.startMonth);
         setEndMonth(res.data.data.endMonth);
+        setMonths(res.data.data.months);
       }
     })
     .finally(() => {
@@ -98,9 +103,9 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
   }, []);
 
   return (
-    <SafeAreaView style={[styles.container]}>
+    <SafeAreaView style={styles.container}>
 
-      <ScrollView style={[styles.scroll]}>
+      <ScrollView style={styles.scroll}>
       
         <ThemedView style={styles.subContainer}>
           
@@ -269,7 +274,13 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
                   <Pressable style={styles.pressable} onPress={() => setModalVisible(false) }>
                     <ThemedText type='link' style={styles.white}>Annuler</ThemedText>
                   </Pressable>
-                  <Pressable style={[styles.pressable, { backgroundColor: 'green'}]}>
+                  <Pressable 
+                    style={[styles.pressable, { backgroundColor: 'green'}]} 
+                    onPress={() => { 
+                      setModalVisible(false) ;
+                      router.push('/filter');
+                    }}
+                  >
                     <ThemedText type='link' style={styles.white}>Filtrer</ThemedText>
                   </Pressable>
                 </ThemedView>

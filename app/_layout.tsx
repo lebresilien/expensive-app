@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { User, UserContext } from '@/hooks/userContext';
+import { Category, User, UserContext } from '@/hooks/userContext';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 // Prevent the splash screen from auto-hiding before asset loadding is complete.
@@ -19,10 +19,16 @@ export default function RootLayout() {
   });
 
   const [userData, setUserData] = useState<User | null>(null);
+  const [expensiveCategories, setExpensiveCategories] = useState<Category[]>([]);
+  const [incomeCategories, setIncomeCategories] = useState<Category[]>([]);
 
   const value = {
     userData,
     setUserData,
+    expensiveCategories,
+    incomeCategories,
+    setExpensiveCategories,
+    setIncomeCategories
   };
 
   useEffect(() => {

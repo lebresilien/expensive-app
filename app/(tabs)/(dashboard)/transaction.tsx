@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 5,
     rowGap: 20,
-    paddingTop: StatusBar.currentHeight
+    //paddingTop: StatusBar.currentHeight
   },
   header: {
     display: 'flex',

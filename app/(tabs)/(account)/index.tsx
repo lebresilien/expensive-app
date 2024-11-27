@@ -1,8 +1,13 @@
+import api from "@/app/lib/api";
+import { Loading } from "@/components/Loading";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemeIcon } from "@/components/ThemeIcon";
+import { UserContext } from "@/hooks/userContext";
+import { TabDisplayContext } from "@/hooks/useTabDisplay";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { useState } from "react";
+import { router } from "expo-router";
+import { useContext, useEffect, useState } from "react";
 import { Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity } from "react-native";
 
 type ThemedTextProps = {
@@ -22,12 +27,20 @@ const navItem = [
 ];
 
 const FAB = ({ backgroundColor, value } : { backgroundColor: string, value: string }) => {
+    
+    const { setDisplay } = useContext(TabDisplayContext);
+
     return (
       <TouchableOpacity
         style={[styles.fab, { backgroundColor }]}
         onPress={() => {
           // Handle button press
-          alert(value)
+          setDisplay('none');
+          router.navigate({pathname: '/modal', 
+            params: {
+                type: value
+            }
+          })
         }}
       >
         <ThemeIcon name="plus" size={24} />
@@ -38,10 +51,18 @@ const FAB = ({ backgroundColor, value } : { backgroundColor: string, value: stri
 export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps) {
 
     const [links, setLinks] = useState(navItem);
+    const [loading, setLoading] = useState(true);
     const [item, setItem] = useState<'depenses' | 'revenus'>('depenses')
 
     const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
     const color = useThemeColor({ light: lightColor, dark: darkColor }, 'icon');
+    const { 
+        expensiveCategories, 
+        incomeCategories,
+        setExpensiveCategories,
+        setIncomeCategories
+    } = useContext(UserContext);
+
     const selectedItem = (name: string) => {
         const spreadLinks = [...links];
         const item = spreadLinks.find((item) => item.name === name);
@@ -55,10 +76,21 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
         }
     }
 
+    useEffect(() => {
+        api.get('categories')
+        .then((res) => {
+            if(res.data.success) {
+                setIncomeCategories(res.data.data.incomes);
+                setExpensiveCategories(res.data.data.expenses);
+            }
+        })
+        .finally(() => setLoading(false))
+    }, [])
+
     return (
         <SafeAreaView style={styles.container}>
 
-            <ThemedText type="defaultSemiBold">Categories</ThemedText>
+            <ThemedText type="defaultSemiBold" style={{marginHorizontal: 10, textAlign: 'center'}}>Categories</ThemedText>
 
             <ThemedView style={styles.nav}>
                 {links.map((item) => (
@@ -82,6 +114,46 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
                 ))}
             </ThemedView>
 
+            {loading ? 
+            
+                <Loading /> : 
+
+                <ScrollView style={styles.content}>
+
+                    {item === 'depenses' ? 
+                    <>
+                        {expensiveCategories.map((item, index) => (
+                            <ThemedView 
+                                key={item.id} 
+                                style={[
+                                    styles.item,
+                                    (index + 1) < expensiveCategories.length && { borderBottomWidth: 1, borderColor: backgroundColor}
+                                ]}
+                            >
+                                <ThemedText style={styles.itemText}>{item.name}</ThemedText>
+                            </ThemedView>
+                        ))}
+                    </> :
+                    <>
+                        {incomeCategories.map((item, index) => (
+                            <ThemedView 
+                                key={item.id} 
+                                style={[
+                                    styles.item,
+                                    (index + 1) < incomeCategories.length && { borderBottomWidth: 1, borderColor: backgroundColor}
+                                ]}
+                            >
+                                <ThemedText style={styles.itemText}>{item.name}</ThemedText>
+                            </ThemedView>
+                        ))}
+                    </>
+                    }
+
+                </ScrollView>
+
+            }
+
+
             <FAB backgroundColor={backgroundColor} value={item} />
             
         </SafeAreaView>
@@ -92,12 +164,14 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       //paddingTop: StatusBar.currentHeight,
-      paddingHorizontal: 10,
-      rowGap: 20
+      //paddingHorizontal: 10,
+      rowGap: 20,
+      paddingVertical: 10
     },
     nav: {
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginHorizontal: 10
     },
     navItem: {
         flex: 1,
@@ -117,5 +191,13 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         padding: 15,
         elevation: 5,
-    }
+    },
+    itemText: {
+        textTransform: 'capitalize',
+        fontWeight: '500'
+    },
+    item: {
+        padding: 15,
+        marginHorizontal: 10
+    },
 });

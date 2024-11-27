@@ -91,10 +91,7 @@ export default function ModalSaving({ lightColor, darkColor }: ThemedTextProps) 
                 }
             }
         })
-        .catch((err) => {
-            console.log('err', err)
-            alert(err.response.data.message);
-        })
+        .catch((err) => alert(err.response.data.message))
         .finally(() => setIsSubmitting(false))
     }
 
@@ -165,35 +162,35 @@ const styles = StyleSheet.create({
     link: {
         paddingTop: 20,
         fontSize: 20,
-      },
-      header: {
+    },
+    header: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 5
-      },
-      form: {
+    },
+    form: {
         paddingHorizontal: 10,
         paddingVertical: 10,
         borderRadius: 10
-      },
-      input: {
+    },
+    input: {
         borderWidth: 0,
         borderColor: 'transparent',
         padding: 0
-      },
-      containerDate: {
+    },
+    containerDate: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center'
-      },
-      pressable: {
+    },
+    pressable: {
         borderRadius: 10,
         borderWidth: 1,
         borderColor: 'transparent',
         paddingVertical: 2,
         paddingHorizontal: 5,
         backgroundColor: '#d4d4d4'
-      },
+    },
 });

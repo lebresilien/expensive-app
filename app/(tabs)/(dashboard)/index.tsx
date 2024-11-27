@@ -11,7 +11,6 @@ import { router } from 'expo-router';
 import { ExpenseContext } from '@/hooks/useExpense';
 import { TabDisplayContext } from '@/hooks/useTabDisplay';
 import { BlurView } from 'expo-blur';
-import ThemedButton from '@/components/ThemedButton';
 
 type ThemedTextProps = {
   lightColor?: string;
@@ -104,6 +103,8 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
   return (
     <SafeAreaView style={styles.container}>
+
+      <StatusBar animated={true} backgroundColor="#0ea5e9" />
 
       <ScrollView style={styles.scroll}>
       
@@ -311,7 +312,8 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight,
+    //paddingTop: StatusBar.currentHeight,
+    // @ts-ignore
     ...StyleSheet.absoluteFill,
   },
   header: {

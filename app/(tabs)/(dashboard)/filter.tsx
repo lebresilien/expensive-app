@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       paddingHorizontal: 5,
-      paddingTop: StatusBar.currentHeight
+      //paddingTop: StatusBar.currentHeight
     },
     scroll: {
         flex: 1

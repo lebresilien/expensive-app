@@ -130,7 +130,7 @@ export default function SettingScreen({ lightColor, darkColor}: ThemedTextProps)
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      paddingTop: StatusBar.currentHeight,
+      //paddingTop: StatusBar.currentHeight,
       paddingHorizontal: 10,
       rowGap: 20
     },

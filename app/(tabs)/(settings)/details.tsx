@@ -132,7 +132,7 @@ export default function DetailScreen({ lightColor, darkColor}: ThemedTextProps) 
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      paddingTop: StatusBar.currentHeight,
+      //paddingTop: StatusBar.currentHeight,
       rowGap: 20
     },
     scroll: {

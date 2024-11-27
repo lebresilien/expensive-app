@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
     rowGap: 20,
-    paddingTop: StatusBar.currentHeight
+    //paddingTop: StatusBar.currentHeight
   },
   link: {
     paddingTop: 20,

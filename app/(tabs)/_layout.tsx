@@ -61,6 +61,15 @@ export default function TabLayout() {
             ),
           }}
         />
+         <Tabs.Screen
+          name="(account)"
+          options={{
+            title: 'Compte',
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon name={focused ? 'information-circle' : 'information-circle-outline'} color={color} />
+            ),
+          }}
+        />
       </Tabs>
     </TabDisplayContext.Provider>
   );

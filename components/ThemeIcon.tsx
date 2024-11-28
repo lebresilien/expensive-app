@@ -10,7 +10,8 @@ export type ThemedIconProps = {
     name: React.ComponentProps<typeof Entypo | typeof AntDesign | typeof Ionicons | typeof Foundation>["name"];
     type?: 'default' | 'ant' | 'ionic' | 'found',
     size?: number
-    onPress?: () => void
+    onPress?: () => void,
+    color?: string
 };
 export const ThemeIcon = ({
     lightColor,
@@ -18,15 +19,16 @@ export const ThemeIcon = ({
     name,
     type = 'default',
     size = 17,
-    onPress
+    onPress,
+    color
 }: ThemedIconProps) => {
-    const color = useThemeColor({ light: lightColor, dark: darkColor }, 'icon');
+    const colored = useThemeColor({ light: lightColor, dark: darkColor }, 'icon');
     return (
         <>
-            {type === 'default' && <Entypo size={size} color={color} name={name} onPress={onPress}  /> }
-            {type === 'ant' && <AntDesign size={size} color={color} name={name} onPress={onPress} /> }
-            {type === 'ionic' && <Ionicons size={size} color={color} name={name} onPress={onPress} /> }
-            {type === 'found' && <Foundation size={size} color={color} name={name} onPress={onPress} /> }
+            {type === 'default' && <Entypo size={size} color={color ? color : colored} name={name} onPress={onPress}  /> }
+            {type === 'ant' && <AntDesign size={size} color={color ? color : colored} name={name} onPress={onPress} /> }
+            {type === 'ionic' && <Ionicons size={size} color={color ? color : colored} name={name} onPress={onPress} /> }
+            {type === 'found' && <Foundation size={size} color={color ? color : colored} name={name} onPress={onPress} /> }
         </>
     );
 }

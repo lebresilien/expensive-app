@@ -8,7 +8,8 @@ import { TabDisplayContext } from "@/hooks/useTabDisplay";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { router } from "expo-router";
 import { useContext, useEffect, useState } from "react";
-import { Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity } from "react-native";
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity } from "react-native";
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 type ThemedTextProps = {
     lightColor?: string;
@@ -63,6 +64,8 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
         setIncomeCategories
     } = useContext(UserContext);
 
+    const { showActionSheetWithOptions } = useActionSheet();
+
     const selectedItem = (name: string) => {
         const spreadLinks = [...links];
         const item = spreadLinks.find((item) => item.name === name);
@@ -85,7 +88,50 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
             }
         })
         .finally(() => setLoading(false))
-    }, [])
+    }, []);
+
+    const deleteItem = (id: string) => {
+        api.delete(`categories/${id}`)
+        .then(() => {
+            if(item === "depenses") {
+                const copyValue = [...expensiveCategories];
+                // @ts-ignore
+                const data = copyValue.filter((item) => parseInt(item.id) !== parseInt(current.id.toString()));
+                setExpensiveCategories(data);
+            } else {
+                const copyValue = [...incomeCategories];
+                // @ts-ignore
+                const data = copyValue.filter((item) => parseInt(item.id) !== parseInt(current.id.toString()));
+                setIncomeCategories(data);
+            }
+            
+        })
+        .catch((err) => {
+            alert(err.response.data.message);
+        })
+    }
+
+    const showConfirmDialog = (id: string) => {
+        const options = ['Supprimer', 'Annuler'];
+        const destructiveButtonIndex = 0;
+        const cancelButtonIndex = 1;
+    
+        showActionSheetWithOptions({
+          options,
+          cancelButtonIndex,
+          destructiveButtonIndex
+        // @ts-ignore
+        }, (selectedIndex: number) => {
+          switch (selectedIndex) {
+            case destructiveButtonIndex:
+              // Delete
+              deleteItem(id);
+              break;
+    
+            case cancelButtonIndex:
+              // Canceled
+          }});
+      }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -131,6 +177,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
                                 ]}
                             >
                                 <ThemedText style={styles.itemText}>{item.name}</ThemedText>
+                                <ThemeIcon name="trash" size={24} color="#ef4444" onPress={() => showConfirmDialog(item.id)} />
                             </ThemedView>
                         ))}
                     </> :
@@ -144,6 +191,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
                                 ]}
                             >
                                 <ThemedText style={styles.itemText}>{item.name}</ThemedText>
+                                <ThemeIcon name="trash" size={24} color="#ef4444" onPress={() => showConfirmDialog(item.id)} />
                             </ThemedView>
                         ))}
                     </>
@@ -197,6 +245,10 @@ const styles = StyleSheet.create({
         fontWeight: '500'
     },
     item: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         padding: 15,
         marginHorizontal: 10
     },

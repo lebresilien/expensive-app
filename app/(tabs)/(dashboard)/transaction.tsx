@@ -4,7 +4,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { UserContext } from '@/hooks/userContext';
 import { useContext, useState } from 'react';
 import api from '../../lib/api';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import ThemedButton from '@/components/ThemedButton';
 import { Loading } from '@/components/Loading';
 import { ThemeIcon } from '@/components/ThemeIcon';
@@ -50,14 +50,15 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedExpense, setSelectedExpense] = useState(false);
-  const [selectedIncome, setSelectedIncome] = useState(true);
+ /*  const [selectedExpense, setSelectedExpense] = useState(false);
+  const [selectedIncome, setSelectedIncome] = useState(true); */
   const [trx, setTrx] = useState({
     name: '',
     amount: '',
     description: '',
     date: ''
-  })
+  });
+  const { id, name, type } = useLocalSearchParams();
 
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
   const background = useThemeColor({ light: lightColor, dark: darkColor }, 'inactiveTint');
@@ -80,7 +81,7 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
     formState: { isValid }
   } = useForm<FormValues>();
 
-  const handleOnchange = (type: 'expenses' | 'incomes') => {
+  /* const handleOnchange = (type: 'expenses' | 'incomes') => {
     if(type === 'expenses') {
       setSelectedExpense(true);
       setSelectedIncome(false);
@@ -88,7 +89,7 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
       setSelectedExpense(false);
       setSelectedIncome(true);
     }
-  }
+  } */
 
   const onChange = (event:DateTimePickerEvent, selectedDate: Date | undefined) => {
     setShow(false);
@@ -108,12 +109,12 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
         name: (data.name).toLowerCase(),
         amount: data.amount,
         description: data.description,
-        type_id: selectedExpense ? 2 : 1,
+        category_id: id,
         date: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
     })
     .then((res) => {
       if (res.data.success) {
-          if (selectedExpense) {
+          if (type === "depenses") {
             setExpenses([
               ...expenses,
               {
@@ -138,7 +139,7 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
             ]);
             setTotalIncomes(totalIncomes + parseFloat(res.data.data.amount));
           }
-        router.back();
+        router.push('/(tabs)/(dashboard)');
       }
     })
     .catch((err) => {
@@ -266,7 +267,8 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
                         onChange(e);
                         handle(e, 'amount')
                       }}
-                      style={styles.input}
+                      //style={styles.input}
+                      style={{height: 10}}
                       keyboardType='numeric'
                       type='icon'
                     />
@@ -276,20 +278,11 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
               />
             </ThemedView>
 
-            <ThemedView style={[styles.typePreview, { backgroundColor }]}>
-              <RadioButton 
-                label='depenses'
-                isSelected={selectedExpense}
-                onPress={() => handleOnchange('expenses')}
-                color={color}
-              />
-              <RadioButton 
-                label='revenus'
-                isSelected={selectedIncome}
-                onPress={() => handleOnchange('incomes')}
-                color={color}
-              />
-            </ThemedView>
+            <Pressable style={styles.typePreview} onPress={() => router.back()}>
+              <ThemedText style={[styles.category, { backgroundColor }]}>
+                { name }
+              </ThemedText>
+            </Pressable>
 
           </ThemedView>
 
@@ -382,13 +375,17 @@ const styles = StyleSheet.create({
     flex: 1
   },
   typePreview: {
-    display: 'flex',
+    //display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 2,
-    justifyContent: 'space-between',
+    flex: 1,
+    justifyContent: 'flex-end',
+    //paddingHorizontal: 10,
+    
+  },
+  category: {
+    paddingVertical: 8,
     paddingHorizontal: 10,
-    paddingVertical: 13,
     borderRadius: 10
   },
   empty: {

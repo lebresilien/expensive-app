@@ -90,7 +90,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
         .finally(() => setLoading(false))
     }, []);
 
-    const deleteItem = (id: string) => {
+    const deleteItem = (id: number) => {
         api.delete(`categories/${id}`)
         .then(() => {
             if(item === "depenses") {
@@ -111,7 +111,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
         })
     }
 
-    const showConfirmDialog = (id: string) => {
+    const showConfirmDialog = (id: number) => {
         const options = ['Supprimer', 'Annuler'];
         const destructiveButtonIndex = 0;
         const cancelButtonIndex = 1;
@@ -136,7 +136,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
     return (
         <SafeAreaView style={styles.container}>
 
-            <ThemedText type="defaultSemiBold" style={{marginHorizontal: 10, textAlign: 'center'}}>Categories</ThemedText>
+            <ThemedText type="defaultSemiBold" style={{ marginHorizontal: 10, textAlign: 'center' }}>Categories</ThemedText>
 
             <ThemedView style={styles.nav}>
                 {links.map((item) => (
@@ -164,7 +164,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
             
                 <Loading /> : 
 
-                <ScrollView style={styles.content}>
+                <ScrollView>
 
                     {item === 'depenses' ? 
                     <>

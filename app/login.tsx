@@ -53,12 +53,12 @@ export default function LoginScreen() {
           const user = {name: data.name, email: data.email};
           setUserData(user);
 
-          router.navigate('/(tabs)');
+          router.push('/(tabs)');
         }
       })
-      .catch(() => {
+      .catch((err) => {
         //console.error('message', JSON.stringify(err))
-        Alert.alert('Identifiants de connexion non valides');
+        Alert.alert(err.response.data.message);
       })
       .finally(() => {
         setIsSubmitting(false)
@@ -97,6 +97,7 @@ export default function LoginScreen() {
                     placeholder='Email'
                     autoFocus
                     onChangeText={onChange}
+                    autoCapitalize='none'
                   />
                 </ThemedView>
               )}

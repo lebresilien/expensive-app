@@ -18,8 +18,8 @@ export default function TabTwoScreen() {
 
   const checkToken = async () => {
     try {
-      const value = await AsyncStorage.getItem("@viewedOnboarding");
-      console.log('boardnsssf', value)
+      const value = await AsyncStorage.getItem("@token");
+      console.log('hello', value)
     } catch (error) {
       console.log("Error Token : ", error);
     }
@@ -30,7 +30,7 @@ export default function TabTwoScreen() {
   })
 
   const logout = async () => {
-    console.log('inside')
+    console.log('content lofigi')
     api.post('logout')
     .then(async() => {
       await AsyncStorage.removeItem('@token');
@@ -38,10 +38,10 @@ export default function TabTwoScreen() {
       await AsyncStorage.removeItem('@email');
       //await AsyncStorage.removeItem('@viewedOnboarding');
       setUserData(null);
-      router.push('/login');
+      router.replace('/login');
     })
     .catch((err) => {
-      Alert.alert('Une erreur est survenue');
+      Alert.alert(err.response.data.message);
     })
   }
   return (

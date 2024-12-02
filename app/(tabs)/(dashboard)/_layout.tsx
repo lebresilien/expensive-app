@@ -38,6 +38,7 @@ export default function StackLayout() {
                 headerShown: false
             }}>
                 <Stack.Screen name="index" />
+                <Stack.Screen name="semi-modal" options={{ presentation: 'modal', animation: 'slide_from_bottom'}} getId={() => String(Date.now())} />
                 <Stack.Screen name="transaction" options={{ presentation: 'modal', animation: 'slide_from_bottom'}} getId={() => String(Date.now())} />
                 <Stack.Screen name="filter" options={{ presentation: 'modal', animation: 'slide_from_bottom'}} getId={() => String(Date.now())} />
             </Stack>

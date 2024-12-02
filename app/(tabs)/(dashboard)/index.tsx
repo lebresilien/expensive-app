@@ -128,8 +128,8 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
                 <ThemedView 
                   style={[{ backgroundColor: background }, styles.iconWrapper]}
                   onTouchStart={() => {
-                    setDisplay('none');
-                    router.push('/transaction');
+                    //setDisplay('flex');
+                    router.push('/semi-modal');
                   }}
                 >
                   <ThemeIcon name='add' type='ionic' />
@@ -199,14 +199,14 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
                   onTouchStart={() => setSelected('incomes')}
                   style={[styles.swiperItem, selected === 'incomes' && ([styles.selected, { borderBottomColor: background }])]}
                 >
-                  <ThemedText style={[selected === 'incomes' && { color: background, fontWeight: 'bold' }]}>revenus</ThemedText>
+                  <ThemedText style={[selected === 'incomes' && { color: background, fontWeight: 'bold' }]}>Revenus</ThemedText>
                 </ThemedView>
 
                 <ThemedView 
                   onTouchStart={() => setSelected('expenses')}
                   style={[styles.swiperItem, selected === 'expenses' && ([styles.selected, { borderBottomColor: background }])]}
                 >
-                  <ThemedText style={[selected === 'expenses' && { color: background, fontWeight: 'bold' }]}>depenses</ThemedText>
+                  <ThemedText style={[selected === 'expenses' && { color: background, fontWeight: 'bold' }]}>Depenses</ThemedText>
                 </ThemedView>
 
               </ThemedView>

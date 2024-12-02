@@ -50,11 +50,12 @@ export default function RegisterScreen() {
           const user = {name: data.data.name, email: data.data.email};
           setUserData(user);
 
-          router.navigate('/(tabs)');
+          router.push('/(tabs)');
         }          
       })
       .catch((err) => {
         console.log('error', JSON.stringify(err));
+        alert(err.response.data.message);
       })
       .finally(() => {
         setIsSubmitting(false)
@@ -116,6 +117,7 @@ export default function RegisterScreen() {
                               value={value}
                               placeholder='Email'
                               onChangeText={onChange}
+                              autoCapitalize='none'
                           />
                         </ThemedView>
                     )}

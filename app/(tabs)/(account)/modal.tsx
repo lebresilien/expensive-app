@@ -49,7 +49,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
 
         api.post('categories', {
             name: data.name,
-            type_id: type === 'depenses' ? 2 : 1
+            type_id: type === 'depenses' ? 1 : 2
         })
         .then((res) => {
             alert(res.data.message);

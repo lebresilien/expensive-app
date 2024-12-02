@@ -11,6 +11,7 @@ import { router } from 'expo-router';
 import { ExpenseContext } from '@/hooks/useExpense';
 import { TabDisplayContext } from '@/hooks/useTabDisplay';
 import { BlurView } from 'expo-blur';
+import { UserContext } from '@/hooks/userContext';
 
 type ThemedTextProps = {
   lightColor?: string;
@@ -82,6 +83,12 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
   const background = useThemeColor({ light: lightColor, dark: darkColor }, 'inactiveTint');
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'icon');
+  const { 
+    expensiveCategories, 
+    incomeCategories,
+    setExpensiveCategories,
+    setIncomeCategories
+} = useContext(UserContext);
 
   useEffect(() => {
     api.get('transactions')
@@ -94,6 +101,8 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
         setStartMonth(res.data.data.startMonth);
         setEndMonth(res.data.data.endMonth);
         setMonths(res.data.data.months);
+        setIncomeCategories(res.data.data.categoryIncomes);
+        setExpensiveCategories(res.data.data.categoryExpenses);
       }
     })
     .finally(() => {
@@ -165,7 +174,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
                           <ThemeIcon name='arrow-down' type='ionic' size={13} />
                         </ThemedView>
                         
-                        <ThemedText>revenus</ThemedText>
+                        <ThemedText>Revenus</ThemedText>
 
                       </ThemedView>
 
@@ -181,7 +190,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
                           <ThemeIcon name='arrow-up' type='ionic' size={13} />
                         </ThemedView>
                         
-                        <ThemedText>revenus</ThemedText>
+                        <ThemedText>Depenses</ThemedText>
 
                       </ThemedView>
 

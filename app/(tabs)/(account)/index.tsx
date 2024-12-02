@@ -52,7 +52,7 @@ const FAB = ({ backgroundColor, value } : { backgroundColor: string, value: stri
 export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps) {
 
     const [links, setLinks] = useState(navItem);
-    const [loading, setLoading] = useState(true);
+    //const [loading, setLoading] = useState(true);
     const [item, setItem] = useState<'depenses' | 'revenus'>('depenses')
 
     const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
@@ -79,7 +79,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
         }
     }
 
-    useEffect(() => {
+    /* useEffect(() => {
         api.get('categories')
         .then((res) => {
             if(res.data.success) {
@@ -88,7 +88,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
             }
         })
         .finally(() => setLoading(false))
-    }, []);
+    }, []); */
 
     const deleteItem = (id: number) => {
         api.delete(`categories/${id}`)
@@ -159,10 +159,10 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
                     </ThemedView>
                 ))}
             </ThemedView>
-
+{/* 
             {loading ? 
             
-                <Loading /> : 
+                <Loading /> :  */}
 
                 <ScrollView>
 
@@ -199,7 +199,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
 
                 </ScrollView>
 
-            }
+            {/* } */}
 
 
             <FAB backgroundColor={backgroundColor} value={item} />

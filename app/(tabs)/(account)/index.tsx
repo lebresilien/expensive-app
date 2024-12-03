@@ -52,7 +52,6 @@ const FAB = ({ backgroundColor, value } : { backgroundColor: string, value: stri
 export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps) {
 
     const [links, setLinks] = useState(navItem);
-    //const [loading, setLoading] = useState(true);
     const [item, setItem] = useState<'depenses' | 'revenus'>('depenses')
 
     const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
@@ -79,29 +78,19 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
         }
     }
 
-    /* useEffect(() => {
-        api.get('categories')
-        .then((res) => {
-            if(res.data.success) {
-                setIncomeCategories(res.data.data.incomes);
-                setExpensiveCategories(res.data.data.expenses);
-            }
-        })
-        .finally(() => setLoading(false))
-    }, []); */
-
     const deleteItem = (id: number) => {
         api.delete(`categories/${id}`)
         .then(() => {
+            console.log('eioooe', item)
             if(item === "depenses") {
                 const copyValue = [...expensiveCategories];
                 // @ts-ignore
-                const data = copyValue.filter((item) => parseInt(item.id) !== parseInt(current.id.toString()));
+                const data = copyValue.filter((item) => parseInt(item.id) != id);
                 setExpensiveCategories(data);
             } else {
                 const copyValue = [...incomeCategories];
                 // @ts-ignore
-                const data = copyValue.filter((item) => parseInt(item.id) !== parseInt(current.id.toString()));
+                const data = copyValue.filter((item) => parseInt(item.id) != id);
                 setIncomeCategories(data);
             }
             
@@ -159,47 +148,41 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
                     </ThemedView>
                 ))}
             </ThemedView>
-{/* 
-            {loading ? 
-            
-                <Loading /> :  */}
 
-                <ScrollView>
+            <ScrollView>
 
-                    {item === 'depenses' ? 
-                    <>
-                        {expensiveCategories.map((item, index) => (
-                            <ThemedView 
-                                key={item.id} 
-                                style={[
-                                    styles.item,
-                                    (index + 1) < expensiveCategories.length && { borderBottomWidth: 1, borderColor: backgroundColor}
-                                ]}
-                            >
-                                <ThemedText style={styles.itemText}>{item.name}</ThemedText>
-                                <ThemeIcon name="trash" size={24} color="#ef4444" onPress={() => showConfirmDialog(item.id)} />
-                            </ThemedView>
-                        ))}
-                    </> :
-                    <>
-                        {incomeCategories.map((item, index) => (
-                            <ThemedView 
-                                key={item.id} 
-                                style={[
-                                    styles.item,
-                                    (index + 1) < incomeCategories.length && { borderBottomWidth: 1, borderColor: backgroundColor}
-                                ]}
-                            >
-                                <ThemedText style={styles.itemText}>{item.name}</ThemedText>
-                                <ThemeIcon name="trash" size={24} color="#ef4444" onPress={() => showConfirmDialog(item.id)} />
-                            </ThemedView>
-                        ))}
-                    </>
-                    }
+                {item === 'depenses' ? 
+                <>
+                    {expensiveCategories.map((item, index) => (
+                        <ThemedView 
+                            key={item.id} 
+                            style={[
+                                styles.item,
+                                (index + 1) < expensiveCategories.length && { borderBottomWidth: 1, borderColor: backgroundColor}
+                            ]}
+                        >
+                            <ThemedText style={styles.itemText}>{item.name}</ThemedText>
+                            <ThemeIcon name="trash" size={24} color="#ef4444" onPress={() => showConfirmDialog(item.id)} />
+                        </ThemedView>
+                    ))}
+                </> :
+                <>
+                    {incomeCategories.map((item, index) => (
+                        <ThemedView 
+                            key={item.id} 
+                            style={[
+                                styles.item,
+                                (index + 1) < incomeCategories.length && { borderBottomWidth: 1, borderColor: backgroundColor}
+                            ]}
+                        >
+                            <ThemedText style={styles.itemText}>{item.name}</ThemedText>
+                            <ThemeIcon name="trash" size={24} color="#ef4444" onPress={() => showConfirmDialog(item.id)} />
+                        </ThemedView>
+                    ))}
+                </>
+                }
 
-                </ScrollView>
-
-            {/* } */}
+            </ScrollView>
 
 
             <FAB backgroundColor={backgroundColor} value={item} />

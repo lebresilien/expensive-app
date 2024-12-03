@@ -52,7 +52,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
             type_id: type === 'depenses' ? 1 : 2
         })
         .then((res) => {
-            alert(res.data.message);
+            //alert(res.data.message);
             if(type === 'depenses') {
                 const item = [...expensiveCategories];
                 item.push({
@@ -68,6 +68,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
                 });
                 setIncomeCategories(item);
             }
+            router.back();
         })
         .catch((err) => alert(err.response.data.message))
         .finally(() => setIsSubmitting(false))

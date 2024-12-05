@@ -81,7 +81,7 @@ export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps)
     const deleteItem = (id: number) => {
         api.delete(`categories/${id}`)
         .then(() => {
-            console.log('eioooe', item)
+         
             if(item === "depenses") {
                 const copyValue = [...expensiveCategories];
                 // @ts-ignore

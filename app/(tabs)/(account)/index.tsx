@@ -52,7 +52,7 @@ const FAB = ({ backgroundColor, value } : { backgroundColor: string, value: stri
 export default function AccountScreen({ lightColor, darkColor}: ThemedTextProps) {
 
     const [links, setLinks] = useState(navItem);
-    const [item, setItem] = useState<'depenses' | 'revenus'>('depenses')
+    const [item, setItem] = useState<'depenses' | 'revenus'>('depenses');
 
     const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
     const color = useThemeColor({ light: lightColor, dark: darkColor }, 'icon');

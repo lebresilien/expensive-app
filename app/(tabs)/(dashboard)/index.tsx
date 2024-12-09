@@ -105,9 +105,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
         setExpensiveCategories(res.data.data.categoryExpenses);
       }
     })
-    .finally(() => {
-      setLoading(false);
-    })
+    .finally(() => setLoading(false))
   }, []);
 
   return (

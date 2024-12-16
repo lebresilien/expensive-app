@@ -83,9 +83,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'contentBackground');
   const background = useThemeColor({ light: lightColor, dark: darkColor }, 'inactiveTint');
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'icon');
-  const { 
-    expensiveCategories, 
-    incomeCategories,
+  const {
     setExpensiveCategories,
     setIncomeCategories
 } = useContext(UserContext);

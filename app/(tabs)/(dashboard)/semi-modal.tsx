@@ -6,7 +6,7 @@ import { UserContext } from '@/hooks/userContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { router } from 'expo-router';
 import { useContext, useState } from 'react';
-import { StyleSheet, SafeAreaView, StatusBar, ScrollView } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 
 type ThemedTextProps = {
     lightColor?: string

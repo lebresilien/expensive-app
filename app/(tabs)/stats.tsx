@@ -1,4 +1,4 @@
-import { Dimensions, SafeAreaView, ScrollView, StatusBar, StyleSheet } from "react-native";
+import { Dimensions, SafeAreaView, ScrollView, Modal, StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useEffect, useState } from "react";
@@ -6,6 +6,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import api from "../lib/api";
 import { Loading } from "@/components/Loading";
 import { BarChart, PieChart } from "react-native-chart-kit";
+import { Picker } from "@react-native-picker/picker";
 
 type ThemedTextProps = {
     lightColor?: string;
@@ -35,6 +36,8 @@ export default function StatisticScreen({ lightColor, darkColor}: ThemedTextProp
     const [pieDatasetYear, setPieDatasetYear] = useState([]);
     const [mostExpense, setMostExpense] = useState([]);
     const [mostExpenseYear, setMostExpenseYear] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedValue, setSelectedValue] = useState('');
 
     const screenWidth = Dimensions.get("window").width - 40;
 
@@ -81,6 +84,10 @@ export default function StatisticScreen({ lightColor, darkColor}: ThemedTextProp
             anotherItem.selected = false;
             setLinks(spreadLinks);
         }
+    }
+
+    const filter = () => {
+        setModalVisible(true)
     }
 
     useEffect(() => {
@@ -141,7 +148,7 @@ export default function StatisticScreen({ lightColor, darkColor}: ThemedTextProp
                         <ThemedView style={styles.content}>
 
                             <ThemedView style={[styles.selectedPeriod, { backgroundColor }]}>
-                                <ThemedText>
+                                <ThemedText onPress={filter}>
                                     { months[months.length - 1] }
                                 </ThemedText>
                             </ThemedView>
@@ -201,7 +208,7 @@ export default function StatisticScreen({ lightColor, darkColor}: ThemedTextProp
                         <ThemedView style={styles.content}>
 
                             <ThemedView style={[styles.selectedPeriod, { backgroundColor }]}>
-                                <ThemedText>
+                                <ThemedText onPress={filter}>
                                     { years[years.length - 1] }
                                 </ThemedText>
                             </ThemedView>
@@ -260,6 +267,45 @@ export default function StatisticScreen({ lightColor, darkColor}: ThemedTextProp
                         </ThemedView>
                     }
 
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        alert('Modal has been closed.');
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    <ThemedView style={styles.centeredView}>
+                        <ThemedView style={styles.modalView}>
+                            <ThemedText type="link" style={{fontWeight: 'bold'}}>Selectionner le mois</ThemedText>
+                            <Picker
+                                selectedValue={selectedValue}
+                                onValueChange={(itemValue) => {
+                                    setSelectedValue(itemValue);
+                                    setModalVisible(false);
+                                }}
+                            >
+                                {item === "mensuelle" &&  months.map((item, index) => (
+                                    <Picker.Item
+                                        key={index} 
+                                        label={item}
+                                        value={item} 
+                                    />
+                                ))}
+
+                                {item === "annuelle" &&  years.map((item, index) => (
+                                    <Picker.Item
+                                        key={index} 
+                                        label={item}
+                                        value={item} 
+                                    />
+                                ))}
+                            </Picker>
+                        </ThemedView>
+                    </ThemedView>
+                </Modal>
+
                 </ScrollView>
             }
 
@@ -313,4 +359,24 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         justifyContent: 'space-between'
     },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        //alignItems: 'center',
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        //alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    }
 });

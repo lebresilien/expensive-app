@@ -78,7 +78,7 @@ export default function Filter({ lightColor, darkColor }: ThemedTextProps) {
                     <ThemedText type="defaultSemiBold">Selectionnez le mois</ThemedText>
                     <Picker
                         selectedValue={selectedMonth}
-                        onValueChange={(itemValue, itemIndex) =>
+                        onValueChange={(itemValue) =>
                             setSelectedMonth(itemValue)
                         }
                     >

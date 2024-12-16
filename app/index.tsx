@@ -15,7 +15,7 @@ export default function Presentation() {
     try {
       const value = await AsyncStorage.getItem("@viewedOnboarding");
       if (value !== null) {
-        router.replace('/login');
+        //router.replace('/login');
         setViewedOnboarding(true);
       }
     } catch (error) {

@@ -37,7 +37,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="(dashboard)"
           options={{
-            title: 'Home',
+            title: 'Accueil',
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
             ),
@@ -46,7 +46,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="stats"
           options={{
-            title: 'Stats',
+            title: 'Statistisques',
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon name={focused ? 'stats-chart' : 'stats-chart-outline'} color={color} />
             ),
@@ -64,7 +64,7 @@ export default function TabLayout() {
          <Tabs.Screen
           name="(account)"
           options={{
-            title: 'Compte',
+            title: 'Categories',
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon name={focused ? 'information-circle' : 'information-circle-outline'} color={color} />
             ),

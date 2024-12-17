@@ -38,6 +38,8 @@ export default function StatisticScreen({ lightColor, darkColor}: ThemedTextProp
     const [mostExpenseYear, setMostExpenseYear] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedValue, setSelectedValue] = useState('');
+    const [initValue, setInitValue] = useState('');
+    const [initValueYear, setInitValueYear] = useState('');
 
     const screenWidth = Dimensions.get("window").width - 40;
 
@@ -85,11 +87,6 @@ export default function StatisticScreen({ lightColor, darkColor}: ThemedTextProp
             setLinks(spreadLinks);
         }
     }
-
-    const filter = () => {
-        setModalVisible(true)
-    }
-
     useEffect(() => {
         api.get('transactions', {
             params: {
@@ -100,6 +97,8 @@ export default function StatisticScreen({ lightColor, darkColor}: ThemedTextProp
             const data = res.data.data;
             setMonths(data.months);
             setYears(data.years);
+            setInitValue(data.months[data.months.length - 1]);
+            setInitValueYear(data.years[data.years.length - 1]);
             setDataset({
                 total_expense: data.total_expense_month,
                 total_income: data.total_income_month,
@@ -111,9 +110,54 @@ export default function StatisticScreen({ lightColor, darkColor}: ThemedTextProp
             setMostExpense(data.most_expense);
             setMostExpenseYear(data.most_expense_year);
         })
-        .catch((err) =>  alert(err.response.data.message))
+        .catch((err) => alert(err.response.data.message))
         .finally(() => setLoading(false))
     }, []);
+
+    const filter = (value: string) => { 
+
+        setLoading(true);
+
+        api.get('transactions', {
+            params: {
+                type: item === "mensuelle" ? "month" : "year",
+                date: value
+            }
+        })
+        .then((res) => {
+
+            const data = res.data.data;
+            const copyDataSet = datasets;
+
+            if(item === "mensuelle") {
+                setPieDataset(data.pie_month);
+                setMostExpense(data.most_expense);
+                setDataset({
+                    total_expense: data.total_expense_month,
+                    total_income: data.total_income_month,
+                    total_expense_year: copyDataSet.total_expense_year,
+                    total_income_year: copyDataSet.total_income_year
+                });
+                setInitValue(value);
+            } else {
+                setPieDatasetYear(data.pie_year);
+                setMostExpenseYear(data.most_expense_year);
+                setDataset({
+                    total_expense: copyDataSet.total_expense,
+                    total_income: copyDataSet.total_income,
+                    total_expense_year: data.total_expense_year,
+                    total_income_year: data.total_income_year
+                });
+                setInitValueYear(value);
+            }
+           
+        })
+        .catch((err) =>  alert(err.response.data.message))
+        .finally(() => {
+            setModalVisible(false);
+            setLoading(false);
+        });
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -148,8 +192,8 @@ export default function StatisticScreen({ lightColor, darkColor}: ThemedTextProp
                         <ThemedView style={styles.content}>
 
                             <ThemedView style={[styles.selectedPeriod, { backgroundColor }]}>
-                                <ThemedText onPress={filter}>
-                                    { months[months.length - 1] }
+                                <ThemedText onPress={() => setModalVisible(true)}>
+                                    {initValue}
                                 </ThemedText>
                             </ThemedView>
 
@@ -208,8 +252,8 @@ export default function StatisticScreen({ lightColor, darkColor}: ThemedTextProp
                         <ThemedView style={styles.content}>
 
                             <ThemedView style={[styles.selectedPeriod, { backgroundColor }]}>
-                                <ThemedText onPress={filter}>
-                                    { years[years.length - 1] }
+                                <ThemedText onPress={() => setModalVisible(true)}>
+                                    {initValueYear}
                                 </ThemedText>
                             </ThemedView>
 
@@ -283,7 +327,7 @@ export default function StatisticScreen({ lightColor, darkColor}: ThemedTextProp
                                 selectedValue={selectedValue}
                                 onValueChange={(itemValue) => {
                                     setSelectedValue(itemValue);
-                                    setModalVisible(false);
+                                    filter(itemValue);
                                 }}
                             >
                                 {item === "mensuelle" &&  months.map((item, index) => (

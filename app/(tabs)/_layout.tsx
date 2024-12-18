@@ -61,12 +61,21 @@ export default function TabLayout() {
             ),
           }}
         />
-         <Tabs.Screen
+        <Tabs.Screen
           name="(account)"
           options={{
             title: 'Categories',
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon name={focused ? 'information-circle' : 'information-circle-outline'} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: 'Profile',
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon name={focused ? 'person-circle' : 'person-circle-outline'} color={color} />
             ),
           }}
         />

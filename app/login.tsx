@@ -44,25 +44,39 @@ export default function LoginScreen() {
         password: data.password
       })
       .then(async (res) => {
+
         const data = res.data.data;
+
         if(res.data.success) {
-          await AsyncStorage.setItem("@token", data.token);
-          await AsyncStorage.setItem("@name", data.name);
-          await AsyncStorage.setItem("@email", data.email);
 
-          const user = {name: data.name, email: data.email};
-          setUserData(user);
+          try {
 
-          router.push('/(tabs)');
+            await AsyncStorage.multiSet([
+              [
+                "@token", data.token
+              ],
+              [
+                "@name", data.name
+              ],
+              [
+                "@email", data.email
+              ]
+            ]);
+
+            const user = { name: data.name, email: data.email };
+            setUserData(user);
+  
+            router.push('/(tabs)');
+
+          } catch(e) {
+            console.log('error', e);
+            alert('error during removing storage');
+          }
+    
         }
       })
-      .catch((err) => {
-        //console.error('message', JSON.stringify(err))
-        Alert.alert(err.response.data.message);
-      })
-      .finally(() => {
-        setIsSubmitting(false)
-      })
+      .catch((err) => alert(err.response.data.message))
+      .finally(() => setIsSubmitting(false))
     } 
 
     return (

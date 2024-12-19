@@ -2,7 +2,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const api = axios.create({
-  baseURL: 'http://192.168.1.220:8000/api/'
+  baseURL: 'http://192.168.1.222:8000/api/'
   //baseURL: 'https://expensive-app.etsmanagementimmo.com/api/'
 });
 

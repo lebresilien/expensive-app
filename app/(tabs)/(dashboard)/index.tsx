@@ -314,12 +314,14 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    //backgroundColor: 'green'
   },
   scroll: {
     flex: 1,
     //paddingTop: StatusBar.currentHeight,
     // @ts-ignore
     ...StyleSheet.absoluteFill,
+    
   },
   header: {
     paddingHorizontal: 5,

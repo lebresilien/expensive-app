@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, StatusBar } from "react-native";
 import LoginScreen from "@/app/login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import OnBoarding from "./page-viewer";
 import { Loading } from "@/components/Loading";
 import { router } from "expo-router";
+import { UserContext } from "@/hooks/userContext";
 
 export default function Presentation() {
   const [loading, setLoading] = useState(true);
   const [viewedOnboarding, setViewedOnboarding] = useState(false);
+  const { setUserData } = useContext(UserContext);
   //const [viewedToken, setViewedToken] = useState(false);
 
   const checkOnboarding = async () => {
@@ -28,6 +30,11 @@ export default function Presentation() {
   const checkToken = async () => {
     try {
       const value = await AsyncStorage.getItem("@token");
+      const name = await AsyncStorage.getItem("@name");
+      const email = await AsyncStorage.getItem("@email");
+
+      if(name && email) setUserData({ name, email });
+
       if (value !== null) {
         //console.log('token', value)
         router.replace('/(tabs)');

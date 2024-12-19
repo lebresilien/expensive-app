@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
   link: {
     fontSize: 16,
     color: '#000',
+    lineHeight: 20
   },
   buttonCancel: {
     fontSize: 16,

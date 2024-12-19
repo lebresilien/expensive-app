@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, StatusBar } from "react-native";
-import LoginScreen from "@/app/login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import OnBoarding from "./page-viewer";
 import { Loading } from "@/components/Loading";

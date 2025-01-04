@@ -116,7 +116,7 @@ export default function ProfileScreen({ lightColor, darkColor}: ThemedTextProps)
                         >
                             <ThemedText type="link" style={styles.zinColor}>{item.type}</ThemedText>
                             <ThemedView style={styles.rowContent}>
-                                <ThemedText type="link" style={styles.zinColor}>{item.name}</ThemedText>
+                                <ThemedText type="link" style={[styles.zinColor, { textTransform: 'lowercase' }]}>{item.name}</ThemedText>
                                 <ThemeIcon name="chevron-forward" type="ionic" color="#a3a3a3" />
                             </ThemedView>
                         </ThemedView>
@@ -130,7 +130,7 @@ export default function ProfileScreen({ lightColor, darkColor}: ThemedTextProps)
                     ]}
                     onTouchStart={logout}
                 >
-                    <ThemedText type="link" style={styles.zinColor}>se deconneter</ThemedText>
+                    <ThemedText type="link" style={styles.zinColor}>deconnexion</ThemedText>
                     <ThemeIcon name="logout" type="ant" color="#a3a3a3" />
                 </ThemedView>
 

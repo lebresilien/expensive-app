@@ -11,7 +11,6 @@ api.interceptors.request.use(
     async config => {
       const token = await AsyncStorage.getItem('@token');
       // or from another storage
-      console.log('tou', token);
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

@@ -134,6 +134,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
                   style={[{ backgroundColor: background }, styles.iconWrapper]}
                   onTouchStart={() => {
                     //setDisplay('flex');
+                    //alert('ghh');
                     router.push('/semi-modal');
                   }}
                 >

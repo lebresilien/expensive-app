@@ -5,6 +5,7 @@ import { ThemeIcon } from '@/components/ThemeIcon';
 import { UserContext } from '@/hooks/userContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { router } from 'expo-router';
+import React from 'react';
 import { useContext, useState } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 

@@ -1,7 +1,6 @@
 import { StyleSheet, TouchableOpacity, Text, View, Alert, StatusBar, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { UserContext } from '@/hooks/userContext';
 import { useContext, useState } from 'react';
 import api from '../../lib/api';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -46,7 +45,7 @@ const RadioButton = ({
 
 const months = ["Jan", "Fev", "Mar", "Avr", "Mai", "Juin", "Juil", "Aug", "Sept", "Oct", "Nov", "Dec"];
 export default function Transaction({ lightColor, darkColor }: ThemedTextProps) {
-  
+ 
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);

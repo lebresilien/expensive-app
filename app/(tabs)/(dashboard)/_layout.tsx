@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import { Transaction } from '.';
 import { useState } from 'react';
-import { ExpenseContext } from '@/hooks/useExpense';
+import { ExpenseContext, Trx } from '@/hooks/useExpense';
 
 export type Month = {
     startMonth: string
@@ -9,8 +9,8 @@ export type Month = {
 }
 export default function StackLayout() {
 
-    const [expenses, setExpenses] = useState<Transaction[]>([]);
-    const [incomes, setIncomes] = useState<Transaction[]>([]);
+    const [expense, setExpense] = useState<Trx[]>([]);
+    const [income, setIncome] = useState<Trx[]>([]);
     const [months, setMonths] = useState<Month[]>([]);
     const [totalIncomes, setTotalIncomes] = useState(0);
     const [totalExpenses, setTotalExpenses] = useState(0);
@@ -19,10 +19,10 @@ export default function StackLayout() {
 
     return (
         <ExpenseContext.Provider value={{ 
-            expenses, 
-            setExpenses, 
-            incomes, 
-            setIncomes,
+            expense, 
+            setExpense, 
+            income, 
+            setIncome,
             totalIncomes,
             setTotalIncomes,
             totalExpenses,

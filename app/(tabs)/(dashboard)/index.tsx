@@ -27,6 +27,7 @@ export type Transaction = {
 };
 
 const ItemList = ({
+  id,
   name, 
   date, 
   amount,
@@ -35,8 +36,9 @@ const ItemList = ({
   backgroundColor, 
   color
   }: {
+    id: number,
     name: string,
-    date: string,
+    date: string | null,
     amount: number,
     isExpens: boolean,
     background: string,
@@ -46,11 +48,11 @@ const ItemList = ({
     <ThemedView style={[styles.itemContainer, { backgroundColor: backgroundColor }]}>
       <ThemedView style={styles.itemFirstBlock}>
         <ThemedView style={[{ backgroundColor: background }, styles.avatar]}>
-          <ThemedText style={[{textTransform: 'uppercase'}, {color}]}>{ name.charAt(0) }</ThemedText>
+          <ThemedText style={[{textTransform: 'capitalize'}, {color}]}>{ name.charAt(0) }</ThemedText>
         </ThemedView>
         <ThemedView>
-          <ThemedText type='link' style={styles.bold}>{ name }</ThemedText>
-          <ThemedText type='link' style={{fontWeight: '100'}}>{ date }</ThemedText>
+          <ThemedText style={[{textTransform: 'capitalize'}, styles.bold]}>{ name }</ThemedText>
+          {date && <ThemedText type='link' style={{fontWeight: '100'}}>{ date }</ThemedText>}
         </ThemedView>
       </ThemedView>
       <ThemedText style={{color: isExpens ? 'red' : 'green'}}>{ amount } FCFA</ThemedText>
@@ -64,10 +66,10 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
   const [selected, setSelected] = useState<'incomes' | 'expenses'>('incomes');
  
   const { 
-    expenses, 
-    setExpenses, 
-    incomes, 
-    setIncomes, 
+    expense, 
+    setExpense, 
+    income, 
+    setIncome,
     totalIncomes, 
     setTotalIncomes, 
     totalExpenses, 
@@ -92,8 +94,6 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
     api.get('transactions')
     .then((res) => {
       if(res.data.success) {
-        setIncomes(res.data.data.incomes);
-        setExpenses(res.data.data.expenses);
         setTotalExpenses(parseFloat(res.data.data.totalExpenses));
         setTotalIncomes(parseFloat(res.data.data.totalIncomes));
         setStartMonth(res.data.data.startMonth);
@@ -101,6 +101,8 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
         setMonths(res.data.data.months);
         setIncomeCategories(res.data.data.categoryIncomes);
         setExpensiveCategories(res.data.data.categoryExpenses);
+        setIncome(res.data.data.incomes_categories);
+        setExpense(res.data.data.expenses_categories);
       }
     })
     .finally(() => setLoading(false))
@@ -119,7 +121,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
             <ThemedView style={styles.headerWrapper}>
               
-              <ThemedText type='link' style={{fontWeight: 'bold'}}>Bienvenu</ThemedText>
+              <ThemedText type='link' style={{fontWeight: 'bold'}}>Bienvenuu</ThemedText>
               
               <ThemedView style={styles.icons}>
                 
@@ -220,26 +222,28 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
               <ThemedView style={{marginHorizontal: 10, rowGap: 10}}>
                 {selected === "expenses" ? 
                   <>
-                    {expenses.map((item, index) => (
+                    {expense?.map((item, index) => (
                       <ItemList
                         key={index}
+                        id={item.id}
                         name={item.name}
                         amount={item.amount}
-                        date={item.date}
+                        date={null}
                         background={background}
                         backgroundColor={backgroundColor}
                         isExpens={true}
                         color={color}
-                      />
+                      /> 
                     ))}
                   </>:
                   <>
-                    {incomes.map((item, index) => (
+                    {income?.map((item, index) => (
                       <ItemList
                         key={index}
+                        id={item.id}
                         name={item.name}
                         amount={item.amount}
-                        date={item.date}
+                        date={null}
                         background={background}
                         backgroundColor={backgroundColor}
                         isExpens={false}

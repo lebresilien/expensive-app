@@ -49,8 +49,7 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
- /*  const [selectedExpense, setSelectedExpense] = useState(false);
-  const [selectedIncome, setSelectedIncome] = useState(true); */
+ 
   const [trx, setTrx] = useState({
     name: '',
     amount: '',
@@ -63,11 +62,11 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
   const background = useThemeColor({ light: lightColor, dark: darkColor }, 'inactiveTint');
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'icon');
   const { setDisplay } = useContext(TabDisplayContext);
-  const { 
-    expenses, 
-    setExpenses, 
-    incomes, 
-    setIncomes, 
+  const {  
+    expense, 
+    setExpense, 
+    income, 
+    setIncome, 
     totalIncomes, 
     setTotalIncomes, 
     totalExpenses, 
@@ -79,16 +78,6 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
     handleSubmit,
     formState: { isValid }
   } = useForm<FormValues>();
-
-  /* const handleOnchange = (type: 'expenses' | 'incomes') => {
-    if(type === 'expenses') {
-      setSelectedExpense(true);
-      setSelectedIncome(false);
-    } else {
-      setSelectedExpense(false);
-      setSelectedIncome(true);
-    }
-  } */
 
   const onChange = (event:DateTimePickerEvent, selectedDate: Date | undefined) => {
     setShow(false);
@@ -114,31 +103,25 @@ export default function Transaction({ lightColor, darkColor }: ThemedTextProps) 
     .then((res) => {
       if (res.data.success) {
           if (type === "depenses") {
-            setExpenses([
-              ...expenses,
-              {
-                id: res.data.data.id,
-                name: res.data.data.name,
-                amount: res.data.data.amount,
-                date: res.data.data.date,
-                description: res.data.data.description
-              }
-            ]);
+            const spreadExpense = [...expense];
+            const item = spreadExpense.find((item) => item.id === res.data.data.id);
+            if(item) {
+              item.amount += parseFloat(res.data.data.amount);
+              setExpense(spreadExpense);
+            }
             setTotalExpenses(totalExpenses + parseFloat(res.data.data.amount));
           } else {
-            setIncomes([
-              ...incomes,
-              {
-                id: res.data.data.id,
-                name: res.data.data.name,
-                amount: res.data.data.amount,
-                date: res.data.data.date,
-                description: res.data.data.description
-              }
-            ]);
+            const spreadIncome = [...income];
+            const item = spreadIncome.find((item) => item.id === res.data.data.id);
+            if(item) {
+              item.amount += parseFloat(res.data.data.amount);
+              setIncome(spreadIncome);
+            }
             setTotalIncomes(totalIncomes + parseFloat(res.data.data.amount));
           }
-        router.push('/(tabs)/(dashboard)');
+        //router.navigate('/(tabs)/(dashboard)');
+        router.replace('/(tabs)/(dashboard)');
+        
       }
     })
     .catch((err) => {

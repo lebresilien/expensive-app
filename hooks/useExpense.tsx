@@ -2,15 +2,21 @@ import { Month } from "@/app/(tabs)/(dashboard)/_layout";
 import { Transaction } from "@/app/(tabs)/(dashboard)/index";
 import { createContext } from "react";
 
+export type Trx = {
+    id: number
+    name: string
+    amount: number
+}
+
 type ContextProps = {
-    expenses: Transaction[];
-    incomes: Transaction[];
+    expense: Trx[];
+    income: Trx[];
     months: Month[];
     startMonth: string,
     endMonth: string,
-    setExpenses: (data: Transaction[]) => void;
-    setIncomes: (data: Transaction[]) => void;
     setMonths: (data: Month[]) => void;
+    setIncome: (data: Trx[]) => void;
+    setExpense: (data: Trx[]) => void;
     totalIncomes: number;
     setTotalIncomes: (value: number) => void;
     totalExpenses: number,
@@ -20,8 +26,8 @@ type ContextProps = {
 }
 
 export const ExpenseContext = createContext<ContextProps>({
-    expenses: [],
-    incomes: [],
+    expense: [],
+    income: [],
     months: [],
     startMonth: '',
     endMonth: '',
@@ -34,4 +40,6 @@ export const ExpenseContext = createContext<ContextProps>({
     setMonths: () => null,
     setStartMonth: () => null,
     setEndMonth: () => null,
+    setExpense: () => null,
+    setIncome: () => null,
 });

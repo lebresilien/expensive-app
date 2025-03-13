@@ -26,7 +26,7 @@ export type Transaction = {
   description?: string
 };
 
-const ItemList = ({
+export const ItemList = ({
   id,
   name, 
   date, 
@@ -34,7 +34,8 @@ const ItemList = ({
   isExpens,
   background,
   backgroundColor, 
-  color
+  color,
+  listTransactionByCategory
   }: {
     id: number,
     name: string,
@@ -43,9 +44,13 @@ const ItemList = ({
     isExpens: boolean,
     background: string,
     backgroundColor: string, 
-    color: string
+    color: string,
+    listTransactionByCategory?: (id: number) => void
   } ) => (
-    <ThemedView style={[styles.itemContainer, { backgroundColor: backgroundColor }]}>
+    <Pressable 
+      style={[styles.itemContainer, { backgroundColor: backgroundColor }]}
+      onPress={() => listTransactionByCategory ? listTransactionByCategory(id) : {}}
+    >
       <ThemedView style={styles.itemFirstBlock}>
         <ThemedView style={[{ backgroundColor: background }, styles.avatar]}>
           <ThemedText style={[{textTransform: 'capitalize'}, {color}]}>{ name.charAt(0) }</ThemedText>
@@ -56,7 +61,7 @@ const ItemList = ({
         </ThemedView>
       </ThemedView>
       <ThemedText style={{color: isExpens ? 'red' : 'green'}}>{ amount } FCFA</ThemedText>
-    </ThemedView>
+    </Pressable>
   )
 
 export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
@@ -108,6 +113,22 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
     .finally(() => setLoading(false))
   }, []);
 
+  const listTransactionByCategory = (id: number) => {
+   api.get(`categories/${id}/${startMonth}/${endMonth}`)
+    .then((res) => {
+      router.push({ pathname: '/detail',
+        params: {
+          name: res.data.data.name,
+          type: res.data.data.type,
+          data: JSON.stringify(res.data.data.data),
+          start: startMonth,
+          end: endMonth,
+          color: color
+        }
+      })
+    })
+  }
+
   return (
     <SafeAreaView style={styles.container}>
 
@@ -121,7 +142,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
             <ThemedView style={styles.headerWrapper}>
               
-              <ThemedText type='link' style={{fontWeight: 'bold'}}>Bienvenuu</ThemedText>
+              <ThemedText type='link' style={{fontWeight: 'bold'}}>Bienvenu</ThemedText>
               
               <ThemedView style={styles.icons}>
                 
@@ -219,7 +240,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
 
               </ThemedView>
 
-              <ThemedView style={{marginHorizontal: 10, rowGap: 10}}>
+              <ThemedView style={{ marginHorizontal: 10, rowGap: 10, paddingBottom: 15}}>
                 {selected === "expenses" ? 
                   <>
                     {expense?.map((item, index) => (
@@ -233,6 +254,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
                         backgroundColor={backgroundColor}
                         isExpens={true}
                         color={color}
+                        listTransactionByCategory={() => listTransactionByCategory(item.id)}
                       /> 
                     ))}
                   </>:
@@ -248,6 +270,7 @@ export default function HomeScreen({ lightColor, darkColor}: ThemedTextProps) {
                         backgroundColor={backgroundColor}
                         isExpens={false}
                         color={color}
+                        listTransactionByCategory={() => listTransactionByCategory(item.id)}
                       />
                     ))}
                   </>

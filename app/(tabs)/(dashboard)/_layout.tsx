@@ -1,5 +1,4 @@
 import { Stack } from 'expo-router';
-import { Transaction } from '.';
 import { useState } from 'react';
 import { ExpenseContext, Trx } from '@/hooks/useExpense';
 
@@ -41,6 +40,7 @@ export default function StackLayout() {
                 <Stack.Screen name="semi-modal" options={{ presentation: 'modal', animation: 'slide_from_bottom'}} getId={() => String(Date.now())} />
                 <Stack.Screen name="transaction" options={{ presentation: 'modal', animation: 'slide_from_bottom'}} getId={() => String(Date.now())} />
                 <Stack.Screen name="filter" options={{ presentation: 'modal', animation: 'slide_from_bottom'}} getId={() => String(Date.now())} />
+                <Stack.Screen name="detail" options={{ presentation: 'transparentModal', animation: 'slide_from_bottom' }} />
             </Stack>
         </ExpenseContext.Provider>
     )

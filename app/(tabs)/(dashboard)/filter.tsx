@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { useContext, useState } from "react";
 import { ExpenseContext } from "@/hooks/useExpense";
@@ -20,8 +20,8 @@ export default function Filter({ lightColor, darkColor }: ThemedTextProps) {
     const [selectedMonth, setSelectedMonth] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const {  
-        setExpenses,  
-        setIncomes, 
+        setExpense,  
+        setIncome, 
         setTotalIncomes, 
         setTotalExpenses,
         months,
@@ -39,8 +39,10 @@ export default function Filter({ lightColor, darkColor }: ThemedTextProps) {
         })
         .then((res) => {
           if(res.data.success) {
-            setIncomes(res.data.data.incomes);
-            setExpenses(res.data.data.expenses);
+            //setIncomes(res.data.data.incomes);
+            //setExpenses(res.data.data.expenses);
+            setIncome(res.data.data.incomes_categories);
+            setExpense(res.data.data.expenses_categories);
             setTotalExpenses(parseFloat(res.data.data.totalExpenses));
             setTotalIncomes(parseFloat(res.data.data.totalIncomes));
             setStartMonth( selectedMonth.split('-')[0]);

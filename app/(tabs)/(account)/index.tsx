@@ -7,8 +7,8 @@ import { UserContext } from "@/hooks/userContext";
 import { TabDisplayContext } from "@/hooks/useTabDisplay";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { router } from "expo-router";
-import { useContext, useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity } from "react-native";
+import { useContext, useState } from "react";
+import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useActionSheet } from '@expo/react-native-action-sheet';
 
 type ThemedTextProps = {

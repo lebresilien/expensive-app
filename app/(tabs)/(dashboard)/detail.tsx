@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    height: "50%",
+    height: "55%",
     overflowY: "scroll",
     rowGap: 10,
     backgroundColor: 'white'
